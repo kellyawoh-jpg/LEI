@@ -6,7 +6,7 @@
   <title>Lèi — Mauve Lily</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,10 +18,11 @@
   <!-- Background floating particles -->
   <div class="particle-field" id="particles"></div>
 
-  <!-- Cute Top Navigation -->
+  <!-- Top Navigation -->
   <header class="top-nav">
-    <div class="nav-brand-tag">
+    <div class="nav-brand-tag" id="navHome">
       <span class="nav-dot"></span>
+      <span class="nav-tag-text">Lèi</span>
     </div>
     
     <button class="nav-about-btn" id="aboutBtn">
@@ -30,7 +31,8 @@
     </button>
   </header>
 
-  <main class="scene-container">
+  <!-- VIEW 1: HERO SCENE WITH BLOOMING LILY -->
+  <main class="scene-container" id="heroView">
     <div class="flower-container" id="flowerContainer">
       <svg viewBox="0 0 300 360" class="lily-svg" id="lilySvg" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -56,7 +58,7 @@
           </linearGradient>
 
           <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#fdf4fa" stop-opacity="1" />
+            <stop offset="0%" stop-color="#fdf4fa" />
             <stop offset="50%" stop-color="#b886a5" stop-opacity="0.6" />
             <stop offset="100%" stop-color="#3a1d32" stop-opacity="0" />
           </radialGradient>
@@ -130,24 +132,119 @@
 
       <!-- Get Started Button -->
       <div class="cta-wrapper">
-        <a href="#start" class="get-started-btn" id="getStartedBtn">
+        <button class="get-started-btn" id="getStartedBtn">
           <span>Get Started</span>
           <svg class="btn-arrow" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-        </a>
+        </button>
       </div>
     </div>
-
-    <!-- Replay Trigger -->
-    <button class="replay-btn" id="replayBtn" title="Replay Animation">
-      <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="1 4 1 10 7 10"></polyline>
-        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
-      </svg>
-      <span>Replay</span>
-    </button>
   </main>
+
+  <!-- VIEW 2: QUESTION SCREEN (MULTI-SELECT) -->
+  <section class="page-view hidden" id="questionView">
+    <div class="content-card">
+      <button class="back-link" id="backToHero">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span>Back</span>
+      </button>
+
+      <div class="view-header">
+        <span class="step-tag">Step 01</span>
+        <h2 class="view-title">What part of <strong>HER</strong> are you today?</h2>
+        <p class="view-desc">Select all the energies that reflect your state of being.</p>
+      </div>
+
+      <div class="options-grid">
+        <button class="trait-card" data-trait="ambitious">
+          <div class="trait-spark">✦</div>
+          <div class="trait-name">ambitious</div>
+          <div class="selection-check">✓</div>
+        </button>
+
+        <button class="trait-card" data-trait="resourceful">
+          <div class="trait-spark">✦</div>
+          <div class="trait-name">resourceful</div>
+          <div class="selection-check">✓</div>
+        </button>
+
+        <button class="trait-card" data-trait="thriving">
+          <div class="trait-spark">✦</div>
+          <div class="trait-name">thriving</div>
+          <div class="selection-check">✓</div>
+        </button>
+
+        <button class="trait-card" data-trait="connected">
+          <div class="trait-spark">✦</div>
+          <div class="trait-name">connected</div>
+          <div class="selection-check">✓</div>
+        </button>
+
+        <button class="trait-card" data-trait="expressive">
+          <div class="trait-spark">✦</div>
+          <div class="trait-name">expressive</div>
+          <div class="selection-check">✓</div>
+        </button>
+
+        <button class="trait-card" data-trait="evolving">
+          <div class="trait-spark">✦</div>
+          <div class="trait-name">evolving</div>
+          <div class="selection-check">✓</div>
+        </button>
+      </div>
+
+      <div class="action-footer">
+        <button class="primary-btn" id="continueBtn" disabled>
+          <span>Continue</span>
+          <svg class="btn-arrow" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIEW 3: CELEBRATION "YAYYY! YOUR SPACE IS READY FOR YOU" -->
+  <section class="page-view hidden" id="readyView">
+    <div class="content-card auth-card celebration-card">
+      <!-- Confetti burst canvas -->
+      <canvas id="celebrationCanvas" class="celebration-canvas"></canvas>
+
+      <button class="back-link" id="backToQuestion">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span>Back</span>
+      </button>
+
+      <!-- Animated celebration badge with radiating ripples -->
+      <div class="celebration-badge-wrap">
+        <div class="ripple-ring ring-1"></div>
+        <div class="ripple-ring ring-2"></div>
+        <div class="celebration-badge">
+          <span class="badge-sparkle-left">✦</span>
+          <span class="yay-text">yayyy!</span>
+          <span class="badge-sparkle-right">🌸</span>
+        </div>
+      </div>
+
+      <h2 class="view-title celebration-title">
+        your space is ready for you
+      </h2>
+
+      <p class="ready-desc">
+        sign into <em>l&egrave;i</em> ready for you.
+      </p>
+
+      <div class="auth-actions">
+        <button class="btn-auth-primary" id="signInBtn">Sign In</button>
+        <button class="btn-auth-secondary" id="signUpBtn">Create Account</button>
+      </div>
+    </div>
+  </section>
 
   <!-- Sweet About Modal Dialog -->
   <div class="modal-backdrop" id="aboutModal">
@@ -156,7 +253,7 @@
       <div class="about-icon">🌸</div>
       <h2 class="about-title">About L&egrave;i</h2>
       <p class="about-text">
-        Named after the Italian word for <em>“Her”</em>, <strong>L&egrave;i</strong> is a community built to  help women connect, discover, and grow through every part of life.
+        Named after the Italian word for <em>“Her”</em>, <strong>L&egrave;i</strong> is a community built to help women connect, discover, and grow through every part of life.
       </p>
       <div class="about-footer">Crafted with care and grace.</div>
     </div>
