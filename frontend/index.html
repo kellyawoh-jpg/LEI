@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lèi — Mauve Lily</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient backdrop glows -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <!-- Background floating particles -->
+  <div class="particle-field" id="particles"></div>
+
+  <!-- Cute Top Navigation -->
+  <header class="top-nav">
+    <div class="nav-brand-tag">
+      <span class="nav-dot"></span>
+    </div>
+    
+    <button class="nav-about-btn" id="aboutBtn">
+      <span class="btn-sparkle">✦</span>
+      <span>About</span>
+    </button>
+  </header>
+
+  <main class="scene-container">
+    <div class="flower-container" id="flowerContainer">
+      <svg viewBox="0 0 300 360" class="lily-svg" id="lilySvg" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Mauve gradients -->
+          <linearGradient id="stemGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#2c1e28" />
+            <stop offset="60%" stop-color="#5a3d52" />
+            <stop offset="100%" stop-color="#835c75" />
+          </linearGradient>
+
+          <linearGradient id="outerPetalGrad" x1="50%" y1="100%" x2="50%" y2="0%">
+            <stop offset="0%" stop-color="#3d2235" />
+            <stop offset="35%" stop-color="#69435b" />
+            <stop offset="70%" stop-color="#a47b95" />
+            <stop offset="100%" stop-color="#d6b8c9" />
+          </linearGradient>
+
+          <linearGradient id="innerPetalGrad" x1="50%" y1="100%" x2="50%" y2="0%">
+            <stop offset="0%" stop-color="#4a2c41" />
+            <stop offset="40%" stop-color="#875876" />
+            <stop offset="80%" stop-color="#cba6be" />
+            <stop offset="100%" stop-color="#faebf4" />
+          </linearGradient>
+
+          <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fdf4fa" stop-opacity="1" />
+            <stop offset="50%" stop-color="#b886a5" stop-opacity="0.6" />
+            <stop offset="100%" stop-color="#3a1d32" stop-opacity="0" />
+          </radialGradient>
+
+          <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+        </defs>
+
+        <!-- STEM & LEAVES -->
+        <g class="stem-group">
+          <path class="stem" d="M 150,350 Q 152,260 150,175" />
+          <path class="leaf leaf-left" d="M 150,270 Q 115,260 90,275 Q 120,290 150,278 Z" />
+          <path class="leaf leaf-right" d="M 150,240 Q 185,225 210,235 Q 180,255 150,245 Z" />
+        </g>
+
+        <!-- PETALS: Back & Mid Layers -->
+        <g class="petals-group">
+          <path class="petal petal-back-l" d="M 150,175 C 130,140 75,100 80,60 C 105,75 138,125 150,175 Z" />
+          <path class="petal petal-back-r" d="M 150,175 C 170,140 225,100 220,60 C 195,75 162,125 150,175 Z" />
+          <path class="petal petal-back-top" d="M 150,175 C 130,120 120,45 150,15 C 180,45 170,120 150,175 Z" />
+          <path class="petal petal-mid-l" d="M 150,175 C 120,165 50,160 35,130 C 65,120 115,140 150,175 Z" />
+          <path class="petal petal-mid-r" d="M 150,175 C 180,165 250,160 265,130 C 235,120 185,140 150,175 Z" />
+        </g>
+
+        <!-- STAMENS (Burst out with blooming petals) -->
+        <g class="stamens-group">
+          <g class="stamen-sprout stamen-1">
+            <path class="stamen-filament" d="M 150,175 Q 138,140 122,118" />
+            <ellipse cx="122" cy="118" rx="4" ry="7" transform="rotate(-30 122 118)" class="anther" />
+          </g>
+          <g class="stamen-sprout stamen-2">
+            <path class="stamen-filament" d="M 150,175 Q 144,130 140,103" />
+            <ellipse cx="140" cy="103" rx="3.5" ry="6.5" transform="rotate(-12 140 103)" class="anther" />
+          </g>
+          <g class="stamen-sprout stamen-pistil">
+            <path class="stamen-filament pistil-stem" d="M 150,175 Q 150,135 150,96" />
+            <circle cx="150" cy="95" r="3.5" class="pistil-tip" />
+          </g>
+          <g class="stamen-sprout stamen-3">
+            <path class="stamen-filament" d="M 150,175 Q 156,130 160,103" />
+            <ellipse cx="160" cy="103" rx="3.5" ry="6.5" transform="rotate(12 160 103)" class="anther" />
+          </g>
+          <g class="stamen-sprout stamen-4">
+            <path class="stamen-filament" d="M 150,175 Q 162,140 178,118" />
+            <ellipse cx="178" cy="118" rx="4" ry="7" transform="rotate(30 178 118)" class="anther" />
+          </g>
+        </g>
+
+        <!-- FOREGROUND PETALS & GLOW -->
+        <g class="foreground-petals">
+          <path class="petal petal-front-l" d="M 150,175 C 135,185 85,215 75,180 C 100,160 135,165 150,175 Z" />
+          <path class="petal petal-front-r" d="M 150,175 C 165,185 215,215 225,180 C 200,160 165,165 150,175 Z" />
+          <path class="petal petal-front-c" d="M 150,175 C 135,150 125,90 150,65 C 175,90 165,150 150,175 Z" />
+          <circle cx="150" cy="170" r="18" fill="url(#centerGlow)" class="center-glow" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- REVEALED TYPOGRAPHY -->
+    <div class="brand-block" id="brandBlock">
+      <div class="pretitle">Everything for <strong>HER</strong></div>
+      <h1 class="brand-title">L&egrave;i</h1>
+      <div class="divider">
+        <span class="divider-line"></span>
+        <span class="divider-dot">♦</span>
+        <span class="divider-line"></span>
+      </div>
+      <p class="subtitle">Connect. Discover. Grow</p>
+
+      <!-- Get Started Button -->
+      <div class="cta-wrapper">
+        <a href="#start" class="get-started-btn" id="getStartedBtn">
+          <span>Get Started</span>
+          <svg class="btn-arrow" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Replay Trigger -->
+    <button class="replay-btn" id="replayBtn" title="Replay Animation">
+      <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="1 4 1 10 7 10"></polyline>
+        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+      </svg>
+      <span>Replay</span>
+    </button>
+  </main>
+
+  <!-- Sweet About Modal Dialog -->
+  <div class="modal-backdrop" id="aboutModal">
+    <div class="about-card">
+      <button class="close-modal-btn" id="closeAboutBtn" aria-label="Close">&times;</button>
+      <div class="about-icon">🌸</div>
+      <h2 class="about-title">About L&egrave;i</h2>
+      <p class="about-text">
+        Named after the Italian word for <em>“Her”</em>, <strong>L&egrave;i</strong> is a community built to  help women connect, discover, and grow through every part of life.
+      </p>
+      <div class="about-footer">Crafted with care and grace.</div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
