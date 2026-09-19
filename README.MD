@@ -70,3 +70,5 @@ The real SMS flow uses Twilio Verify through the Vercel functions in `api/`. Git
 3. Deploy the project and use its Vercel URL for signup and SMS verification.
 
 Never place Twilio credentials in frontend files or GitHub Pages.
+
+For private developer testing only, add `ALLOW_DEVELOPER_BYPASS=true` and `DEVELOPER_BYPASS_CODE` in Vercel. Keep this disabled for public production use; the bypass code is intentionally never stored in the repository.

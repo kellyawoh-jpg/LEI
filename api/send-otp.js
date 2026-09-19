@@ -19,6 +19,10 @@ export default async function handler(request) {
       return jsonResponse({ error: 'Enter a valid mobile number.' }, 400);
     }
 
+    if (process.env.ALLOW_DEVELOPER_BYPASS === 'true' && process.env.DEVELOPER_BYPASS_CODE) {
+      return jsonResponse({ sent: true, developerBypass: true });
+    }
+
     const credentials = Buffer.from(`${process.env.TWILIO_ACCOUNT_SID}:${process.env.TWILIO_AUTH_TOKEN}`).toString('base64');
     const body = new URLSearchParams({
       To: phone,
