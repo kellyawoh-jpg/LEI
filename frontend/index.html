@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="theme-mauve" id="appBody">
   <!-- Ambient backdrop glows -->
   <div class="ambient-glow glow-1"></div>
   <div class="ambient-glow glow-2"></div>
@@ -18,8 +18,8 @@
   <!-- Background floating particles -->
   <div class="particle-field" id="particles"></div>
 
-  <!-- Top Navigation -->
-  <header class="top-nav">
+  <!-- Top Navigation (Visible ONLY on initial entry) -->
+  <header class="top-nav" id="publicNav">
     <div class="nav-brand-tag" id="navHome">
       <span class="nav-dot"></span>
       <span class="nav-tag-text">Lèi</span>
@@ -31,12 +31,15 @@
     </button>
   </header>
 
-  <!-- VIEW 1: HERO SCENE WITH BLOOMING LILY -->
+  <!-- ====================================================
+       GATEWAY (MAUVE): NOTHING ELSE IS SEEN UNTIL AUTHENTICATED
+       ==================================================== -->
+
+  <!-- STEP 1: HERO SCENE WITH BLOOMING LILY -->
   <main class="scene-container" id="heroView">
     <div class="flower-container" id="flowerContainer">
       <svg viewBox="0 0 300 360" class="lily-svg" id="lilySvg" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <!-- Mauve gradients -->
           <linearGradient id="stemGrad" x1="0%" y1="100%" x2="0%" y2="0%">
             <stop offset="0%" stop-color="#2c1e28" />
             <stop offset="60%" stop-color="#5a3d52" />
@@ -76,7 +79,7 @@
           <path class="leaf leaf-right" d="M 150,240 Q 185,225 210,235 Q 180,255 150,245 Z" />
         </g>
 
-        <!-- PETALS: Back & Mid Layers -->
+        <!-- PETALS -->
         <g class="petals-group">
           <path class="petal petal-back-l" d="M 150,175 C 130,140 75,100 80,60 C 105,75 138,125 150,175 Z" />
           <path class="petal petal-back-r" d="M 150,175 C 170,140 225,100 220,60 C 195,75 162,125 150,175 Z" />
@@ -85,7 +88,7 @@
           <path class="petal petal-mid-r" d="M 150,175 C 180,165 250,160 265,130 C 235,120 185,140 150,175 Z" />
         </g>
 
-        <!-- STAMENS (Burst out with blooming petals) -->
+        <!-- STAMENS -->
         <g class="stamens-group">
           <g class="stamen-sprout stamen-1">
             <path class="stamen-filament" d="M 150,175 Q 138,140 122,118" />
@@ -130,7 +133,6 @@
       </div>
       <p class="subtitle">Connect. Discover. Grow</p>
 
-      <!-- Get Started Button -->
       <div class="cta-wrapper">
         <button class="get-started-btn" id="getStartedBtn">
           <span>Get Started</span>
@@ -142,7 +144,7 @@
     </div>
   </main>
 
-  <!-- VIEW 2: QUESTION SCREEN (MULTI-SELECT) -->
+  <!-- STEP 2: QUESTION SCREEN (MULTI-SELECT) -->
   <section class="page-view hidden" id="questionView">
     <div class="content-card">
       <button class="back-link" id="backToHero">
@@ -207,10 +209,9 @@
     </div>
   </section>
 
-  <!-- VIEW 3: CELEBRATION "YAYYY! YOUR SPACE IS READY FOR YOU" -->
+  <!-- STEP 3: CELEBRATION "YAYYY! YOUR SPACE IS READY FOR YOU" -->
   <section class="page-view hidden" id="readyView">
     <div class="content-card auth-card celebration-card">
-      <!-- Confetti burst canvas -->
       <canvas id="celebrationCanvas" class="celebration-canvas"></canvas>
 
       <button class="back-link" id="backToQuestion">
@@ -220,7 +221,6 @@
         <span>Back</span>
       </button>
 
-      <!-- Animated celebration badge with radiating ripples -->
       <div class="celebration-badge-wrap">
         <div class="ripple-ring ring-1"></div>
         <div class="ripple-ring ring-2"></div>
@@ -240,11 +240,497 @@
       </p>
 
       <div class="auth-actions">
-        <button class="btn-auth-primary" id="signInBtn">Sign In</button>
-        <button class="btn-auth-secondary" id="signUpBtn">Create Account</button>
+        <button class="btn-auth-primary" id="goToSignInBtn">Sign In</button>
+        <button class="btn-auth-secondary" id="goToSignUpBtn">Create Account</button>
       </div>
     </div>
   </section>
+
+  <!-- STEP 4: SIGN IN -->
+  <section class="page-view hidden" id="signInView">
+    <div class="content-card form-card">
+      <button class="back-link" id="backToReadyFromLogin">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span>Back</span>
+      </button>
+
+      <div class="view-header">
+        <h2 class="view-title">Welcome Back</h2>
+        <p class="view-desc">Sign into your private sanctuary.</p>
+      </div>
+
+      <form id="signInForm" class="auth-form">
+        <div class="form-group">
+          <label>Email or Username</label>
+          <input type="text" id="loginIdentifier" placeholder="her@example.com or @username" required>
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="primary-btn submit-btn">Sign In to Lèi</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- STEP 5: CREATE ACCOUNT (Strict Women Verification) -->
+  <section class="page-view hidden" id="signUpView">
+    <div class="content-card form-card">
+      <button class="back-link" id="backToReadyFromSignUp">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span>Back</span>
+      </button>
+
+      <div class="view-header">
+        <span class="step-tag">Sanctuary Verification</span>
+        <h2 class="view-title">Join L&egrave;i</h2>
+        <p class="view-desc">An exclusive space reserved solely for women.</p>
+      </div>
+
+      <form id="signUpForm" class="auth-form">
+        <div class="form-group">
+          <label>Preferred Name</label>
+          <input type="text" id="regName" placeholder="Your name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Username (Unique)</label>
+          <div class="username-input-row">
+            <span class="at-prefix">@</span>
+            <input type="text" id="regUsername" placeholder="yourhandle" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Account Privacy</label>
+          <div class="privacy-toggle-row">
+            <label class="radio-pill">
+              <input type="radio" name="accountPrivacy" value="public" checked>
+              <span>Public Account</span>
+            </label>
+            <label class="radio-pill">
+              <input type="radio" name="accountPrivacy" value="private">
+              <span>Private Account</span>
+            </label>
+          </div>
+          <span class="phone-hint">Private accounts require mutual approval to see feed posts.</span>
+        </div>
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="regEmail" placeholder="her@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label>Create Password</label>
+          <input type="password" id="regPassword" placeholder="••••••••" required>
+        </div>
+
+        <!-- Phone Verification -->
+        <div class="form-group">
+          <label>Mobile Number (For 1-Time SMS Verification)</label>
+          <div class="phone-input-row">
+            <input type="tel" id="regPhone" placeholder="+1 (555) 000-0000" required>
+            <button type="button" class="btn-verify-otp" id="sendOtpBtn">Send Code</button>
+          </div>
+          <span class="phone-hint" id="otpStatusHint">Strictly 1 account per verified real number to deter bad actors.</span>
+        </div>
+
+        <!-- Facial Verification -->
+        <div class="form-group camera-group">
+          <label>Real-Person Liveness Check</label>
+          <p class="camera-desc">Take a quick 2-second real-time selfie to prevent bots and duplicate burner accounts.</p>
+          
+          <div class="camera-preview-box" id="cameraBox">
+            <video id="webcamVideo" autoplay playsinline class="hidden"></video>
+            <div class="camera-placeholder" id="cameraPlaceholder">
+              <span class="camera-icon">📷</span>
+              <span class="camera-status">Camera ready for scan</span>
+            </div>
+            <div class="scan-laser hidden" id="scanLaser"></div>
+          </div>
+
+          <button type="button" class="btn-camera-trigger" id="startCameraBtn">Start Verification Scan</button>
+          <input type="hidden" id="faceVerified" value="false">
+        </div>
+
+        <!-- Explicit Covenant Checkboxes -->
+        <div class="covenant-box">
+          <label class="checkbox-container">
+            <input type="checkbox" id="covenantGender" required>
+            <span class="checkmark"></span>
+            <span class="checkbox-text">
+              I affirm that <strong>I identify as a woman</strong> (cisgender or transgender) and respect this space is exclusively for women.
+            </span>
+          </label>
+
+          <label class="checkbox-container">
+            <input type="checkbox" id="covenantZeroTolerance" required>
+            <span class="checkmark"></span>
+            <span class="checkbox-text">
+              I understand that accounts violating the community covenant are permanently banned and subject to peer review.
+            </span>
+          </label>
+        </div>
+
+        <button type="submit" class="primary-btn submit-btn" id="submitRegBtn">Complete &amp; Enter</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       GATEWAY OVERLAY: ANIMATED PADLOCK
+       ==================================================== -->
+  <div class="padlock-overlay hidden" id="padlockOverlay">
+    <div class="padlock-assembly">
+      <svg class="padlock-svg" viewBox="0 0 100 120">
+        <path class="padlock-shackle" id="padlockShackle" d="M 30,55 V 30 C 30,12 70,12 70,30 V 55" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" />
+        <rect class="padlock-body" x="18" y="50" width="64" height="55" rx="14" fill="currentColor" />
+        <circle cx="50" cy="74" r="5" fill="#1b1218" />
+        <polygon points="48,74 52,74 54,88 46,88" fill="#1b1218" />
+      </svg>
+      <h2 class="unlock-statement" id="unlockQuote">Unlock your potential</h2>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       INSIDE LÈI (CHAMPAGNE THEME): UNLOCKED AFTER AUTH ONLY
+       ==================================================== -->
+
+  <!-- REVEAL 1: CHOOSE SANCTUARY SPACE -->
+  <section class="page-view hidden" id="spacePortalView">
+    <div class="content-card wide-card portal-card">
+      <div class="view-header">
+        <span class="step-tag">Step Into Your Sisterhood</span>
+        <h2 class="view-title">Choose Your Sanctuary Realm</h2>
+        <p class="view-desc">Select the space you wish to enter. You can switch between realms at any time from your top bar.</p>
+      </div>
+
+      <div class="portal-grid">
+        <div class="portal-card-item" data-space-key="cis">
+          <div class="portal-icon">🌷</div>
+          <h3 class="portal-title">Cis L&egrave;i Space</h3>
+          <p class="portal-desc">Dedicated solely to cisgender women sharing hormonal journeys, motherhood, sisterhood, and life chapters.</p>
+          <button class="portal-enter-btn" data-target-space="Cis Lèi Space">Enter Space</button>
+        </div>
+
+        <div class="portal-card-item" data-space-key="trans">
+          <div class="portal-icon">🦋</div>
+          <h3 class="portal-title">Trans L&egrave;i Space</h3>
+          <p class="portal-desc">A safe haven specifically for transgender women. Medical and voice resources, affirmation, solidarity, and safety.</p>
+          <button class="portal-enter-btn" data-target-space="Trans Lèi Space">Enter Space</button>
+        </div>
+
+        <div class="portal-card-item" data-space-key="all">
+          <div class="portal-icon">✨</div>
+          <h3 class="portal-title">All Welcome L&egrave;i Space</h3>
+          <p class="portal-desc">A collective union where all women—cis, trans, and non-binary feminine souls—flourish together in unity.</p>
+          <button class="portal-enter-btn" data-target-space="All Welcome Lèi Space">Enter Space</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVEAL 2: FULL LÈI APPLICATION PLATFORM -->
+  <div class="app-layout hidden" id="appPlatformView">
+    <!-- Champagne Top App Bar -->
+    <nav class="app-navbar">
+      <div class="nav-left">
+        <div class="active-space-pill" id="spaceDropdownTrigger">
+          <span class="space-dot"></span>
+          <span class="active-space-name" id="currentSpaceLabel">All Welcome Lèi Space</span>
+          <span class="dropdown-caret">▼</span>
+        </div>
+
+        <!-- Space Switcher Dropdown -->
+        <div class="space-dropdown hidden" id="spaceDropdownMenu">
+          <div class="space-option" data-space="Cis Lèi Space">🌷 Cis Lèi Space</div>
+          <div class="space-option" data-space="Trans Lèi Space">🦋 Trans Lèi Space</div>
+          <div class="space-option" data-space="All Welcome Lèi Space">✨ All Welcome Lèi Space</div>
+        </div>
+      </div>
+
+      <div class="nav-tabs">
+        <button class="app-tab active" data-tab="feedTab">🌸 Visual Feed</button>
+        <button class="app-tab" data-tab="hubsTab">💬 Discord Channels</button>
+        <button class="app-tab" data-tab="aidTab">🤝 Sisterhood Aid</button>
+      </div>
+
+      <div class="nav-right">
+        <span class="user-chip" id="userProfileChip">@username</span>
+        <button class="btn-report-circle" id="openReportModalBtn" title="Report a Violation">⚠️</button>
+        <button class="btn-logout-circle" id="logoutBtn" title="Log Out">Log Out</button>
+      </div>
+    </nav>
+
+    <!-- TAB 1: INSTAGRAM-STYLE VISUAL FEED -->
+    <section class="platform-tab-pane" id="feedTab">
+      <div class="feed-container">
+        <!-- New Post Creator -->
+        <div class="create-post-card">
+          <div class="post-header-row">
+            <span class="avatar-ph">🌸</span>
+            <input type="text" id="postInputText" placeholder="Share a reflection, milestone, or question with your sisters...">
+          </div>
+          <div class="post-actions-row">
+            <button class="btn-post-photo" id="addPhotoSimBtn">📷 Attach Image</button>
+            <button class="btn-publish-post" id="publishPostBtn">Publish</button>
+          </div>
+        </div>
+
+        <!-- Posts Stream -->
+        <div class="posts-stream" id="postsStream">
+          <article class="feed-post-card">
+            <div class="post-top">
+              <div class="author-info">
+                <span class="post-avatar">🌸</span>
+                <div>
+                  <h4 class="author-name">Elena Rostova</h4>
+                  <span class="author-handle">@elena_r • <span class="badge-privacy">Public</span></span>
+                </div>
+              </div>
+              <button class="post-options">•••</button>
+            </div>
+            <div class="post-visual-box photo-1">
+              <span class="photo-tag">Artisan Studio • Milan</span>
+            </div>
+            <div class="post-reactions">
+              <button class="like-btn" onclick="toggleLike(this)">♥ <span class="like-count">142</span></button>
+              <button class="comment-icon">💬 18</button>
+              <button class="bookmark-icon">🔖</button>
+            </div>
+            <p class="post-caption">
+              <strong>elena_r</strong> Stepping into this new chapter of life with peace and intention. Thank you to everyone in the mentorship group who reminded me of my worth today. 🌿✨
+            </p>
+          </article>
+
+          <article class="feed-post-card">
+            <div class="post-top">
+              <div class="author-info">
+                <span class="post-avatar">🦋</span>
+                <div>
+                  <h4 class="author-name">Maya Lin</h4>
+                  <span class="author-handle">@mayalin • <span class="badge-privacy">Public</span></span>
+                </div>
+              </div>
+              <button class="post-options">•••</button>
+            </div>
+            <div class="post-visual-box photo-2">
+              <span class="photo-tag">Morning Botanical Notes</span>
+            </div>
+            <div class="post-reactions">
+              <button class="like-btn" onclick="toggleLike(this)">♥ <span class="like-count">98</span></button>
+              <button class="comment-icon">💬 12</button>
+              <button class="bookmark-icon">🔖</button>
+            </div>
+            <p class="post-caption">
+              <strong>mayalin</strong> First grant application submitted for my community health startup! Celebrating with matcha and deep gratitude for this sanctuary.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: DISCORD-STYLE CHANNELS & HUBS -->
+    <section class="platform-tab-pane hidden" id="hubsTab">
+      <div class="discord-layout">
+        <!-- Channel Sidebar -->
+        <aside class="discord-sidebar">
+          <div class="channels-section">
+            <span class="section-title">GROWTH &amp; WORK</span>
+            <div class="channel-link active" data-channel="mentorship"># 🤝-mentorship</div>
+            <div class="channel-link" data-channel="career"># 💼-career-guidance</div>
+            <div class="channel-link" data-channel="learning"># 💻-learning-apps-coding</div>
+            <div class="channel-link" data-channel="funding"># 🏛️-funding-platforms</div>
+          </div>
+
+          <div class="channels-section">
+            <span class="section-title">WEALTH &amp; FINANCE</span>
+            <div class="channel-link" data-channel="budgeting"># 📊-budgeting-tools</div>
+            <div class="channel-link" data-channel="investing"># 📈-investment-strategies</div>
+          </div>
+
+          <div class="channels-section">
+            <span class="section-title">HEALTH &amp; WELLNESS</span>
+            <div class="channel-link" data-channel="trackers"># 🗓️-cycle-health-trackers</div>
+            <div class="channel-link" data-channel="mental"># 🧠-mental-wellness</div>
+            <div class="channel-link" data-channel="aihealth"># 🤖-ai-health-tools</div>
+          </div>
+
+          <!-- Age Restricted Sanctuaries -->
+          <div class="channels-section age-locked-section">
+            <span class="section-title">AGE-GATED SANCTUARIES</span>
+            <div class="channel-link locked" data-channel="sex" data-age-req="18">🔒 # 18+-intimacy-and-sex</div>
+            <div class="channel-link locked" data-channel="alcohol" data-age-req="21">🔒 # 21+-wine-and-spirits</div>
+            <div class="channel-link locked" data-channel="teens" data-age-req="teen">🔒 # teen-mothers-and-pregnancy</div>
+          </div>
+        </aside>
+
+        <!-- Channel Main Chat Stream -->
+        <main class="discord-chat-panel">
+          <div class="chat-header">
+            <h3 id="currentChannelHeading"># 🤝-mentorship</h3>
+            <span class="channel-topic" id="currentChannelTopic">Peer guidance, executive office hours, and advice from sisters.</span>
+          </div>
+
+          <!-- Age Gate Blocked Overlay -->
+          <div class="age-gate-wall hidden" id="ageGateWall">
+            <div class="lock-icon">🔒</div>
+            <h4 id="ageGateTitle">Age Restricted Sanctuary</h4>
+            <p id="ageGateDesc">You must verify your age tier to participate in this discussion.</p>
+            <button class="primary-btn" id="verifyAgeActionBtn">Verify My Age Tier</button>
+          </div>
+
+          <div class="chat-messages" id="chatMessages">
+            <div class="chat-msg">
+              <span class="chat-avatar">🌸</span>
+              <div class="msg-body">
+                <div class="msg-meta">
+                  <span class="msg-author">Elena Rostova</span>
+                  <span class="msg-time">Today at 10:14 AM</span>
+                </div>
+                <div class="msg-text">
+                  Reminder: Our women in tech salary negotiation workshop is happening tomorrow! Drop your questions here.
+                </div>
+              </div>
+            </div>
+
+            <div class="chat-msg">
+              <span class="chat-avatar">🦋</span>
+              <div class="msg-body">
+                <div class="msg-meta">
+                  <span class="msg-author">Clara Vance</span>
+                  <span class="msg-time">Today at 10:28 AM</span>
+                </div>
+                <div class="msg-text">
+                  I will definitely be there. Currently prepping my first promotion dossier and need advice on counter-offers.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-input-bar">
+            <input type="text" id="chatInput" placeholder="Message #mentorship...">
+            <button class="btn-send-chat" id="sendChatBtn">Send</button>
+          </div>
+        </main>
+      </div>
+    </section>
+
+    <!-- TAB 3: GOFUNDME-STYLE SISTERHOOD MUTUAL AID -->
+    <section class="platform-tab-pane hidden" id="aidTab">
+      <div class="aid-container">
+        <div class="aid-hero-box">
+          <div class="aid-hero-text">
+            <h2>L&egrave;i Sisterhood Mutual Aid</h2>
+            <p>Direct peer-to-peer assistance for medical care, emergency housing, childcare, educational scholarships, and life transitions.</p>
+          </div>
+          <button class="primary-btn" id="openCreateAidModalBtn">+ Create Aid Request</button>
+        </div>
+
+        <div class="aid-cards-grid">
+          <div class="aid-card">
+            <span class="aid-category">Health &amp; Surgery</span>
+            <h3 class="aid-title">Emergency Gender-Affirming Surgery Recovery Support</h3>
+            <p class="aid-author">Organized by <strong>@sasha_w</strong> for Sasha W.</p>
+            <p class="aid-story">Taking unpaid leave to undergo emergency surgery. Seeking assistance to cover 6 weeks of rent and post-op medication.</p>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill" style="width: 74%;"></div>
+            </div>
+            <div class="aid-metrics">
+              <span><strong>$3,700</strong> raised of $5,000</span>
+              <span>48 donors</span>
+            </div>
+            <button class="btn-donate" onclick="simulateDonate('Sasha')">Support Sister ($25)</button>
+          </div>
+
+          <div class="aid-card">
+            <span class="aid-category">Childcare &amp; Family</span>
+            <h3 class="aid-title">Daycare Relief Fund for Single Mom Finishing Degree</h3>
+            <p class="aid-author">Organized by <strong>@amara_k</strong> for Amara K.</p>
+            <p class="aid-story">Final semester of nursing school while raising my 3-year-old daughter. Funds ensure full-time childcare so I can study and graduate.</p>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill" style="width: 88%;"></div>
+            </div>
+            <div class="aid-metrics">
+              <span><strong>$2,200</strong> raised of $2,500</span>
+              <span>34 donors</span>
+            </div>
+            <button class="btn-donate" onclick="simulateDonate('Amara')">Support Sister ($25)</button>
+          </div>
+
+          <div class="aid-card">
+            <span class="aid-category">Emergency Relocation</span>
+            <h3 class="aid-title">Safe Relocation Assistance for Domestic Independence</h3>
+            <p class="aid-author">Organized by <strong>@anonymous_sister</strong> (Private)</p>
+            <p class="aid-story">Relocating into an independent safe home with first month deposit and basic furniture essentials.</p>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill" style="width: 61%;"></div>
+            </div>
+            <div class="aid-metrics">
+              <span><strong>$1,840</strong> raised of $3,000</span>
+              <span>29 donors</span>
+            </div>
+            <button class="btn-donate" onclick="simulateDonate('Anonymous Sister')">Support Sister ($25)</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- MODAL: ACTIVE IN-APP REPORTING -->
+  <div class="modal-backdrop" id="reportModal">
+    <div class="about-card report-card">
+      <button class="close-modal-btn" id="closeReportBtn" aria-label="Close">&times;</button>
+      <div class="about-icon">🛡️</div>
+      <h2 class="about-title">Report Violation</h2>
+      <p class="about-text">
+        Help keep our sanctuary safe. Reports are immediately reviewed by our female moderation council.
+      </p>
+
+      <form id="reportForm" class="report-form">
+        <div class="form-group">
+          <label>Reason for Report</label>
+          <select id="reportReason" required>
+            <option value="">Select reason...</option>
+            <option value="male_violation">Male participant in women-only space</option>
+            <option value="harassment">Harassment or exclusionary behavior</option>
+            <option value="burner_account">Suspicious burner account or bot</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Details / Username</label>
+          <textarea id="reportDetails" rows="3" placeholder="Provide context..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-auth-primary">Submit to Moderation</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: AGE TIER VERIFICATION -->
+  <div class="modal-backdrop" id="ageVerifyModal">
+    <div class="about-card">
+      <button class="close-modal-btn" id="closeAgeModalBtn">&times;</button>
+      <div class="about-icon">🔒</div>
+      <h2 class="about-title">Verify Age Tier</h2>
+      <p class="about-text">
+        Certain spaces are strictly age-protected for member safety and privacy.
+      </p>
+      <div class="age-picker-row">
+        <button class="btn-age-select" onclick="confirmAgeTier('teen')">I am 13 - 19 (Teen)</button>
+        <button class="btn-age-select" onclick="confirmAgeTier('18')">I am 18+ (Adult)</button>
+        <button class="btn-age-select" onclick="confirmAgeTier('21')">I am 21+ (Legal Age)</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Sweet About Modal Dialog -->
   <div class="modal-backdrop" id="aboutModal">
