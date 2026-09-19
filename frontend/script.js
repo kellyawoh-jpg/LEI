@@ -175,6 +175,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let streamRef = null;
   let isPhoneVerified = false;
   let currentSelectedStatus = 'thriving ✨';
+  const developerMode = new URLSearchParams(window.location.search).get('developer') === '1';
+  const developerBypassCode = 'LEI-DEV-7Q4M-2026';
 
   // ====================================================
   // SMART "GET STARTED" & SESSION CHECK
@@ -360,6 +362,17 @@ document.addEventListener('DOMContentLoaded', () => {
       sendOtpBtn.innerText = 'Dispatching...';
       if (smsPhoneTargetDisplay) smsPhoneTargetDisplay.innerText = phoneVal;
 
+      if (developerMode) {
+        sendOtpBtn.innerText = 'Code Ready';
+        if (otpStatusHint) {
+          otpStatusHint.innerText = 'Developer demo mode: enter the developer verification code.';
+          otpStatusHint.style.color = '#c29352';
+        }
+        if (otpEntryContainer) otpEntryContainer.classList.remove('hidden');
+        if (smsModal) smsModal.classList.add('active');
+        return;
+      }
+
       try {
         const response = await fetch(`${window.LEI_API_BASE_URL || ''}/api/send-otp`, {
           method: 'POST',
@@ -386,6 +399,19 @@ document.addEventListener('DOMContentLoaded', () => {
   async function handleOtpVerification(enteredCode) {
     const code = enteredCode.trim();
     if (!code) return alert('Please enter the 6-digit code received via SMS.');
+
+    if (developerMode && code === developerBypassCode) {
+      isPhoneVerified = true;
+      sendOtpBtn.innerText = '✓ Verified';
+      sendOtpBtn.classList.add('verified');
+      if (otpStatusHint) {
+        otpStatusHint.innerText = 'Developer demo verification completed.';
+        otpStatusHint.style.color = '#2d8a43';
+      }
+      if (smsModal) smsModal.classList.remove('active');
+      alert('Developer verification completed.');
+      return;
+    }
 
     try {
       const phoneInput = document.getElementById('regPhone');
