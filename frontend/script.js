@@ -173,7 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const selectedTraits = new Set();
   let verifiedAgeTiers = new Set();
   let streamRef = null;
-  let generatedSmsOtp = null;
   let isPhoneVerified = false;
   let currentSelectedStatus = 'thriving ✨';
 
@@ -339,8 +338,13 @@ document.addEventListener('DOMContentLoaded', () => {
     return phone.replace(/\D/g, '');
   }
 
+  function toE164Phone(phone) {
+    const digits = normalizePhone(phone);
+    return digits.length === 10 ? `+1${digits}` : `+${digits}`;
+  }
+
   if (sendOtpBtn) {
-    sendOtpBtn.addEventListener('click', () => {
+    sendOtpBtn.addEventListener('click', async () => {
       const phoneInput = document.getElementById('regPhone');
       const phoneVal = phoneInput.value.trim();
       const normPhone = normalizePhone(phoneVal);
@@ -353,33 +357,46 @@ document.addEventListener('DOMContentLoaded', () => {
         return alert('This phone number is already registered to an existing Lèi account.');
       }
 
-      generatedSmsOtp = Math.floor(100000 + Math.random() * 900000).toString();
       sendOtpBtn.innerText = 'Dispatching...';
-
-      const smsBody = encodeURIComponent(`Your secret Lèi Sanctuary verification code is: ${generatedSmsOtp}`);
-      const smsHref = `sms:${phoneVal}?&body=${smsBody}`;
-      
-      if (smsAppDirectLink) smsAppDirectLink.href = smsHref;
-      if (smsAppTriggerBtn) smsAppTriggerBtn.href = smsHref;
       if (smsPhoneTargetDisplay) smsPhoneTargetDisplay.innerText = phoneVal;
 
-      setTimeout(() => {
+      try {
+        const response = await fetch(`${window.LEI_API_BASE_URL || ''}/api/send-otp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: toE164Phone(phoneVal) })
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Unable to send the verification code.');
+
         sendOtpBtn.innerText = 'Code Sent';
         if (otpStatusHint) {
-          otpStatusHint.innerText = `A real 6-digit verification code was sent to ${phoneVal}.`;
+          otpStatusHint.innerText = `A verification code was sent to ${phoneVal}.`;
           otpStatusHint.style.color = '#c29352';
         }
         if (otpEntryContainer) otpEntryContainer.classList.remove('hidden');
         if (smsModal) smsModal.classList.add('active');
-      }, 700);
+      } catch (error) {
+        sendOtpBtn.innerText = 'Send Code';
+        alert(error.message);
+      }
     });
   }
 
-  function handleOtpVerification(enteredCode) {
+  async function handleOtpVerification(enteredCode) {
     const code = enteredCode.trim();
     if (!code) return alert('Please enter the 6-digit code received via SMS.');
 
-    if (code === generatedSmsOtp) {
+    try {
+      const phoneInput = document.getElementById('regPhone');
+      const response = await fetch(`${window.LEI_API_BASE_URL || ''}/api/check-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: toE164Phone(phoneInput.value), code })
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Invalid verification code.');
+
       isPhoneVerified = true;
       sendOtpBtn.innerText = '✓ Verified';
       sendOtpBtn.classList.add('verified');
@@ -389,8 +406,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (smsModal) smsModal.classList.remove('active');
       alert('Mobile number verified successfully!');
-    } else {
-      alert('Invalid verification code.');
+    } catch (error) {
+      alert(error.message);
     }
   }
 

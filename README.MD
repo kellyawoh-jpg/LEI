@@ -56,3 +56,17 @@
 1. Clone or download the repository to your local machine:
    ```bash
    git clone [https://github.com/YOUR-USERNAME/lei-sanctuary.git](https://github.com/YOUR-USERNAME/lei-sanctuary.git)
+
+## SMS Verification Deployment
+
+The real SMS flow uses Twilio Verify through the Vercel functions in `api/`. GitHub Pages cannot run these server-side endpoints.
+
+1. Import this repository into Vercel.
+2. Add these Vercel environment variables:
+   - `TWILIO_ACCOUNT_SID`
+   - `TWILIO_AUTH_TOKEN`
+   - `TWILIO_VERIFY_SERVICE_SID`
+   - `FRONTEND_ORIGIN` set to the Vercel app URL
+3. Deploy the project and use its Vercel URL for signup and SMS verification.
+
+Never place Twilio credentials in frontend files or GitHub Pages.
