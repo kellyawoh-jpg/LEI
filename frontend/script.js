@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const cisStatusTag = document.getElementById('cisStatusTag');
   const transStatusTag = document.getElementById('transStatusTag');
 
-  // Streamlined Ivory User Menu
+  // Streamlined User Menu
   const userMenuTrigger = document.getElementById('userMenuTrigger');
   const userDropdownMenu = document.getElementById('userDropdownMenu');
   const userAvatarInitial = document.getElementById('userAvatarInitial');
@@ -107,6 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const anonCallModal = document.getElementById('anonCallModal');
   const closeAnonCallBtn = document.getElementById('closeAnonCallBtn');
   const startCallConnectBtn = document.getElementById('startCallConnectBtn');
+
+  // Lèi AI Assistant Chat
+  const aiMessagesStream = document.getElementById('aiMessagesStream');
+  const aiInputText = document.getElementById('aiInputText');
+  const sendAiBtn = document.getElementById('sendAiBtn');
 
   // Discord Channels & Age Gating
   const channelLinks = document.querySelectorAll('.channel-link');
@@ -158,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let verifiedAgeTiers = new Set();
   let streamRef = null;
 
-  // Real SMS Generation State
+  // Real SMS Verification State
   let generatedSmsOtp = null;
   let isPhoneVerified = false;
 
@@ -288,12 +293,11 @@ document.addEventListener('DOMContentLoaded', () => {
     render();
   }
 
-  // Helper: Normalize phone numbers for duplicate prevention
   function normalizePhone(phone) {
     return phone.replace(/\D/g, '');
   }
 
-  // 6. Real SMS Dispatch & Verification (Removal of the "1234" dummy prompt)
+  // 6. Real SMS Dispatch & Verification
   if (sendOtpBtn) {
     sendOtpBtn.addEventListener('click', () => {
       const phoneInput = document.getElementById('regPhone');
@@ -304,17 +308,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return alert('Please enter a valid 10-digit US mobile number (e.g. 404-555-0199).');
       }
 
-      // Check if phone number is already registered to another account
       if (localStorage.getItem(`lei_phone_${normPhone}`)) {
         return alert('This phone number is already registered to an existing Lèi account. Only one account per phone number is permitted.');
       }
 
-      // Generate a genuine random 6-digit verification code
       generatedSmsOtp = Math.floor(100000 + Math.random() * 900000).toString();
-
       sendOtpBtn.innerText = 'Dispatching...';
 
-      // Configure direct SMS link for device
       const smsBody = encodeURIComponent(`Your secret Lèi Sanctuary verification code is: ${generatedSmsOtp}`);
       const smsHref = `sms:${phoneVal}?&body=${smsBody}`;
       
@@ -334,7 +334,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Confirming the real code (both from modal or inline form)
   function handleOtpVerification(enteredCode) {
     const code = enteredCode.trim();
     if (!code) return alert('Please enter the 6-digit code received via SMS.');
@@ -419,22 +418,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const password = document.getElementById('regPassword').value;
       const privacy = document.querySelector('input[name="accountPrivacy"]:checked').value;
 
-      // Duplicate Check 1: Email uniqueness
       if (localStorage.getItem(`lei_user_${email}`)) {
         return alert('An account with this email address already exists. Please sign in or use a unique email.');
       }
-
-      // Duplicate Check 2: Phone number uniqueness
       if (localStorage.getItem(`lei_phone_${normPhone}`)) {
         return alert('An account with this mobile phone number already exists. Each member is strictly limited to one account per phone.');
       }
-
-      // Duplicate Check 3: Username uniqueness
       if (localStorage.getItem(`lei_user_${username.toLowerCase()}`)) {
         return alert('This username handle is already taken. Please choose another.');
       }
 
-      // Save user record and phone index
       const userData = { 
         name, 
         username, 
@@ -454,7 +447,7 @@ document.addEventListener('DOMContentLoaded', () => {
       stopWebcam();
       signUpView.classList.add('hidden');
       
-      // Padlock Unlocks -> First-time space selection
+      // Padlock Unlocks -> First-time space selection (Requirement 2: chosen only once)
       triggerPadlockUnlock(() => {
         spacePortalView.classList.remove('hidden');
       });
@@ -485,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('lei_active_session', JSON.stringify(user));
       signInView.classList.add('hidden');
 
-      // Unlocks straight to their previously selected sanctuary space
+      // Unlocks straight to their previously selected sanctuary space without prompting portal
       triggerPadlockUnlock(() => {
         const destSpace = user.primaryAffinity || 'all';
         enterPlatformDirectly(destSpace);
@@ -493,7 +486,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 10. Padlock Sequence & Complete Transition to IVORY (No more mauve)
+  // 10. Padlock Sequence & Complete Transition to IVORY
   function triggerPadlockUnlock(onComplete) {
     publicNav.classList.add('hidden');
     padlockOverlay.classList.remove('hidden');
@@ -505,13 +498,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(() => {
       padlockOverlay.classList.add('hidden');
-      // SWITCH TO IVORY PALETTE
       appBody.className = 'theme-ivory';
       if (onComplete) onComplete();
     }, 2400);
   }
 
-  // 11. First-Time Space Commitment
+  // 11. Sanctuary Space Selection (First time commitment)
   const portalBtns = document.querySelectorAll('.portal-enter-btn');
   portalBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -597,7 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 12. Dropdown Space Switcher
+  // 12. Dropdown Space Switcher (Requirement 2: Interacting with all spaces except cross cis/trans)
   if (spaceDropdownTrigger) {
     spaceDropdownTrigger.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -605,7 +597,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 13. Consolidated User Avatar Dropdown
   if (userMenuTrigger) {
     userMenuTrigger.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -649,7 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 14. Space Affiliation Appeal Modal
+  // 13. Appeal Modal
   if (openAppealModalBtn) {
     openAppealModalBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -672,7 +663,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 15. Tabs Switcher
+  // 14. Tabs Switcher
   appTabs.forEach(tab => {
     tab.addEventListener('click', () => {
       appTabs.forEach(t => t.classList.remove('active'));
@@ -684,7 +675,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 16. Feed Likes & Publishing
+  // 15. Feed Likes & Publishing
   window.toggleLike = function(btn) {
     const countEl = btn.querySelector('.like-count');
     let count = parseInt(countEl.innerText);
@@ -734,7 +725,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 17. USA CITY MEETUPS (ANY US CITY & STATE FILTERING - Requirement 4)
+  // 16. USA CITY MEETUPS (ANY US CITY & STATE FILTERING - Requirement 4)
   function filterUSAMeetups() {
     const searchVal = citySearchInput ? citySearchInput.value.toLowerCase().trim() : '';
     const selectedState = stateFilterSelect ? stateFilterSelect.value : 'ALL';
@@ -755,12 +746,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  if (citySearchInput) {
-    citySearchInput.addEventListener('input', filterUSAMeetups);
-  }
-  if (stateFilterSelect) {
-    stateFilterSelect.addEventListener('change', filterUSAMeetups);
-  }
+  if (citySearchInput) citySearchInput.addEventListener('input', filterUSAMeetups);
+  if (stateFilterSelect) stateFilterSelect.addEventListener('change', filterUSAMeetups);
 
   window.toggleJoinMeetup = function(btn) {
     if (btn.classList.contains('joined')) {
@@ -814,7 +801,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 18. Fizz Vent Wall
+  // 17. Fizz Vent Wall
   if (postFizzBtn && fizzInput) {
     postFizzBtn.addEventListener('click', () => {
       const text = fizzInput.value.trim();
@@ -849,7 +836,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // 19. DMs & Group Chats
+  // 18. DMs & Group Chats
   dmContacts.forEach(contact => {
     contact.addEventListener('click', () => {
       dmContacts.forEach(c => c.classList.remove('active'));
@@ -921,6 +908,52 @@ document.addEventListener('DOMContentLoaded', () => {
         anonCallModal.classList.remove('active');
         startCallConnectBtn.innerText = 'Match with a Listening Sister';
       }, 1500);
+    });
+  }
+
+  // 19. Lèi AI Assistant Chatbot (Requirement 5)
+  if (sendAiBtn && aiInputText) {
+    function sendAiMessage() {
+      const txt = aiInputText.value.trim();
+      if (!txt) return;
+
+      const userBubble = document.createElement('div');
+      userBubble.className = 'ai-bubble user';
+      userBubble.innerHTML = `
+        <p>${txt}</p>
+        <span class="ai-timestamp">You • Just now</span>
+      `;
+      aiMessagesStream.appendChild(userBubble);
+      aiInputText.value = '';
+      aiMessagesStream.scrollTop = aiMessagesStream.scrollHeight;
+
+      // AI Response simulation tailored for women's wellness, study, safety
+      setTimeout(() => {
+        let reply = "I hear you, sister. Remember to take a deep breath; you're doing wonderfully. If you need any campus safety escorts, sanitary products, or study resources right now, let me know.";
+        const lower = txt.toLowerCase();
+
+        if (lower.includes('pad') || lower.includes('period') || lower.includes('sanitary') || lower.includes('gsu')) {
+          reply = "🚨 **Emergency Campus Aid Triggered:** I've notified 3 vetted student sisters near GSU Library North who carry spare menstrual products. Check your campus DM ping or head to the Student Center info desk!";
+        } else if (lower.includes('career') || lower.includes('resume') || lower.includes('interview')) {
+          reply = "💼 **Career Guidance:** Let's elevate your profile! Make sure your resume emphasizes measurable impact. Would you like me to review your bullet points or give you a salary negotiation script?";
+        } else if (lower.includes('sad') || lower.includes('overwhelmed') || lower.includes('anxious')) {
+          reply = "🌿 **Gentle Reminder:** It is completely okay to pause. Close your eyes, drop your shoulders away from your ears, and take 3 deep belly breaths. You are safe in this sanctuary.";
+        }
+
+        const aiBubble = document.createElement('div');
+        aiBubble.className = 'ai-bubble ai';
+        aiBubble.innerHTML = `
+          <p>${reply}</p>
+          <span class="ai-timestamp">Lèi AI • Just now</span>
+        `;
+        aiMessagesStream.appendChild(aiBubble);
+        aiMessagesStream.scrollTop = aiMessagesStream.scrollHeight;
+      }, 700);
+    }
+
+    sendAiBtn.addEventListener('click', sendAiMessage);
+    aiInputText.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendAiMessage();
     });
   }
 
@@ -1109,7 +1142,6 @@ document.addEventListener('DOMContentLoaded', () => {
       appPlatformView.classList.add('hidden');
       spacePortalView.classList.add('hidden');
       publicNav.classList.remove('hidden');
-      // SWITCH BACK TO MAUVE FOR FRONT GATE
       appBody.className = 'theme-mauve';
       heroView.classList.remove('hidden');
     });
