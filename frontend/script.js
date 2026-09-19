@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let isPhoneVerified = false;
   let currentSelectedStatus = 'thriving ✨';
   const developerMode = new URLSearchParams(window.location.search).get('developer') === '1';
-  const developerBypassCode = 'LEI-DEV-7Q4M-2026';
+  const developerBypassCode = '274916';
 
   // ====================================================
   // SMART "GET STARTED" & SESSION CHECK

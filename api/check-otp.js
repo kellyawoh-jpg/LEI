@@ -16,7 +16,7 @@ export default async function handler(request) {
   try {
     const { phone, code } = await request.json();
     if (!/^\+[1-9]\d{7,14}$/.test(phone) || typeof code !== 'string' || code.length < 4 || code.length > 64) {
-      return jsonResponse({ error: 'Enter a valid phone number and 6-digit code.' }, 400);
+      return jsonResponse({ error: 'Enter a valid phone number and 6-digit verification code.' }, 400);
     }
 
     if (process.env.ALLOW_DEVELOPER_BYPASS === 'true' && process.env.DEVELOPER_BYPASS_CODE && code === process.env.DEVELOPER_BYPASS_CODE) {
