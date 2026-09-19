@@ -10,17 +10,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const publicNav = document.getElementById('publicNav');
   const appBody = document.getElementById('appBody');
 
-  // Navigation Buttons
+  // Navigation Buttons & Switches
   const getStartedBtn = document.getElementById('getStartedBtn');
+  const switchToSignUp = document.getElementById('switchToSignUp');
+  const switchToSignIn = document.getElementById('switchToSignIn');
+  const logoutBtn = document.getElementById('logoutBtn');
   const backToHero = document.getElementById('backToHero');
   const backToQuestion = document.getElementById('backToQuestion');
   const backToReadyFromLogin = document.getElementById('backToReadyFromLogin');
   const backToReadyFromSignUp = document.getElementById('backToReadyFromSignUp');
-  const navHome = document.getElementById('navHome');
   const continueBtn = document.getElementById('continueBtn');
   const goToSignInBtn = document.getElementById('goToSignInBtn');
   const goToSignUpBtn = document.getElementById('goToSignUpBtn');
-  const logoutBtn = document.getElementById('logoutBtn');
 
   // Traits & Confetti
   const traitCards = document.querySelectorAll('.trait-card');
@@ -63,14 +64,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const cisStatusTag = document.getElementById('cisStatusTag');
   const transStatusTag = document.getElementById('transStatusTag');
 
-  // Streamlined User Menu
+  // User Menu & Status
   const userMenuTrigger = document.getElementById('userMenuTrigger');
   const userDropdownMenu = document.getElementById('userDropdownMenu');
   const userAvatarInitial = document.getElementById('userAvatarInitial');
   const userDropdownName = document.getElementById('userDropdownName');
   const userDropdownHandle = document.getElementById('userDropdownHandle');
+  const userStatusPillMini = document.getElementById('userStatusPillMini');
+  const statusOptionsGrid = document.querySelectorAll('#statusOptionsGrid .trait-card');
+  const saveStatusBtn = document.getElementById('saveStatusBtn');
 
-  // App Tabs
+  // App Tabs (Left Sidebar)
   const appTabs = document.querySelectorAll('.app-tab');
   const tabPanes = document.querySelectorAll('.platform-tab-pane');
 
@@ -79,7 +83,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const postInputText = document.getElementById('postInputText');
   const postsStream = document.getElementById('postsStream');
 
-  // USA City Meetups Filtering & Creation
+  // Campus SOS
+  const openCampusSosModalBtn = document.getElementById('openCampusSosModalBtn');
+  const campusSosModal = document.getElementById('campusSosModal');
+  const closeCampusSosModalBtn = document.getElementById('closeCampusSosModalBtn');
+  const campusSosForm = document.getElementById('campusSosForm');
+  const campusSosGrid = document.getElementById('campusSosGrid');
+
+  // USA City Meetups
   const citySearchInput = document.getElementById('citySearchInput');
   const stateFilterSelect = document.getElementById('stateFilterSelect');
   const meetupCards = document.querySelectorAll('.meetup-card');
@@ -125,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const ageVerifyModal = document.getElementById('ageVerifyModal');
   const closeAgeModalBtn = document.getElementById('closeAgeModalBtn');
 
-  // Modals (Safety Beacon, Invite, Settings, Report, Appeal, About)
+  // Modals
   const openSafetyBeaconBtn = document.getElementById('openSafetyBeaconBtn');
   const safetyBeaconModal = document.getElementById('safetyBeaconModal');
   const closeBeaconModalBtn = document.getElementById('closeBeaconModalBtn');
@@ -162,12 +173,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const selectedTraits = new Set();
   let verifiedAgeTiers = new Set();
   let streamRef = null;
-
-  // Real SMS Verification State
   let generatedSmsOtp = null;
   let isPhoneVerified = false;
+  let currentSelectedStatus = 'thriving ✨';
 
-  // 1. Ambient Background Particles
+  // ====================================================
+  // SMART "GET STARTED" & SESSION CHECK
+  // ====================================================
+  if (getStartedBtn) {
+    getStartedBtn.addEventListener('click', () => {
+      const activeSession = JSON.parse(localStorage.getItem('lei_active_session'));
+      if (activeSession && activeSession.primaryAffinity) {
+        if (heroView) heroView.classList.add('hidden');
+        if (publicNav) publicNav.classList.add('hidden');
+        triggerPadlockUnlock(() => {
+          appBody.className = 'theme-ivory';
+          enterPlatformDirectly(activeSession.primaryAffinity);
+        });
+      } else {
+        switchView(heroView, questionView);
+      }
+    });
+  }
+
   createParticles(22);
 
   function createParticles(count) {
@@ -186,31 +214,46 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 2. Idle Flower Floating
   setTimeout(() => {
     if (heroView) heroView.classList.add('bloomed');
   }, 3200);
 
-  // 3. Screen Switching Helper
   function switchView(fromView, toView) {
     if (fromView) fromView.classList.add('hidden');
     if (toView) toView.classList.remove('hidden');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  if (getStartedBtn) getStartedBtn.addEventListener('click', () => switchView(heroView, questionView));
+  if (switchToSignUp) switchToSignUp.addEventListener('click', () => switchView(signInView, signUpView));
+  if (switchToSignIn) switchToSignIn.addEventListener('click', () => switchView(signUpView, signInView));
   if (backToHero) backToHero.addEventListener('click', () => switchView(questionView, heroView));
   if (backToQuestion) backToQuestion.addEventListener('click', () => switchView(readyView, questionView));
   if (backToReadyFromLogin) backToReadyFromLogin.addEventListener('click', () => switchView(signInView, readyView));
-  if (backToReadyFromSignUp) backToReadyFromSignUp.addEventListener('click', () => {
-    stopWebcam();
-    switchView(signUpView, readyView);
-  });
-
+  if (backToReadyFromSignUp) backToReadyFromSignUp.addEventListener('click', () => { stopWebcam(); switchView(signUpView, readyView); });
   if (goToSignInBtn) goToSignInBtn.addEventListener('click', () => switchView(readyView, signInView));
   if (goToSignUpBtn) goToSignUpBtn.addEventListener('click', () => switchView(readyView, signUpView));
 
-  // 4. Multi-Select Traits Logic
+  statusOptionsGrid.forEach(card => {
+    card.addEventListener('click', () => {
+      statusOptionsGrid.forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      const traitName = card.querySelector('.trait-name').innerText;
+      currentSelectedStatus = traitName;
+    });
+  });
+
+  if (saveStatusBtn) {
+    saveStatusBtn.addEventListener('click', () => {
+      if (userStatusPillMini) {
+        userStatusPillMini.innerText = `Status: ${currentSelectedStatus}`;
+      }
+      const user = JSON.parse(localStorage.getItem('lei_active_session') || '{}');
+      user.userStatus = currentSelectedStatus;
+      localStorage.setItem('lei_active_session', JSON.stringify(user));
+      alert(`Status updated successfully to: "${currentSelectedStatus}"`);
+    });
+  }
+
   traitCards.forEach(card => {
     card.addEventListener('click', () => {
       const trait = card.getAttribute('data-trait');
@@ -237,7 +280,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 5. Celebration Confetti Cannon
   function launchCelebrationConfetti() {
     if (!celebrationCanvas) return;
     const ctx = celebrationCanvas.getContext('2d');
@@ -297,7 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return phone.replace(/\D/g, '');
   }
 
-  // 6. Real SMS Dispatch & Verification
   if (sendOtpBtn) {
     sendOtpBtn.addEventListener('click', () => {
       const phoneInput = document.getElementById('regPhone');
@@ -305,11 +346,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const normPhone = normalizePhone(phoneVal);
 
       if (!phoneVal || normPhone.length < 10) {
-        return alert('Please enter a valid 10-digit US mobile number (e.g. 404-555-0199).');
+        return alert('Please enter a valid 10-digit US mobile number.');
       }
 
       if (localStorage.getItem(`lei_phone_${normPhone}`)) {
-        return alert('This phone number is already registered to an existing Lèi account. Only one account per phone number is permitted.');
+        return alert('This phone number is already registered to an existing Lèi account.');
       }
 
       generatedSmsOtp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -349,23 +390,20 @@ document.addEventListener('DOMContentLoaded', () => {
       if (smsModal) smsModal.classList.remove('active');
       alert('Mobile number verified successfully!');
     } else {
-      alert('Invalid verification code. Please check the code sent to your mobile phone.');
+      alert('Invalid verification code.');
     }
   }
 
   if (verifyOtpCodeBtn && otpUserInput) {
     verifyOtpCodeBtn.addEventListener('click', () => handleOtpVerification(otpUserInput.value));
   }
-
   if (confirmSmsCodeBtn && smsCodeField) {
     confirmSmsCodeBtn.addEventListener('click', () => handleOtpVerification(smsCodeField.value));
   }
-
   if (closeSmsModalBtn && smsModal) {
     closeSmsModalBtn.addEventListener('click', () => smsModal.classList.remove('active'));
   }
 
-  // 7. Liveness Check / Camera Verification
   if (startCameraBtn) {
     startCameraBtn.addEventListener('click', async () => {
       try {
@@ -401,17 +439,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 8. Sign Up Submission (STRICT UNIQUE PHONE & EMAIL CHECK)
   if (signUpForm) {
     signUpForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      if (!isPhoneVerified) return alert('Please verify your mobile number via the real SMS verification code before continuing.');
+      if (!isPhoneVerified) return alert('Please verify your mobile number via the real SMS verification code.');
       if (faceVerified.value !== 'true') return alert('Please complete the real-person liveness check.');
 
       const name = document.getElementById('regName').value.trim();
       const rawUser = document.getElementById('regUsername').value.trim().replace(/^@/, '');
       const username = `@${rawUser}`;
+      const college = document.getElementById('regCollege').value.trim();
       const email = document.getElementById('regEmail').value.trim().toLowerCase();
       const phone = document.getElementById('regPhone').value.trim();
       const normPhone = normalizePhone(phone);
@@ -419,24 +457,25 @@ document.addEventListener('DOMContentLoaded', () => {
       const privacy = document.querySelector('input[name="accountPrivacy"]:checked').value;
 
       if (localStorage.getItem(`lei_user_${email}`)) {
-        return alert('An account with this email address already exists. Please sign in or use a unique email.');
+        return alert('An account with this email address already exists.');
       }
       if (localStorage.getItem(`lei_phone_${normPhone}`)) {
-        return alert('An account with this mobile phone number already exists. Each member is strictly limited to one account per phone.');
+        return alert('An account with this mobile phone number already exists.');
       }
       if (localStorage.getItem(`lei_user_${username.toLowerCase()}`)) {
-        return alert('This username handle is already taken. Please choose another.');
+        return alert('This username handle is already taken.');
       }
 
       const userData = { 
         name, 
         username, 
+        college,
         email, 
         phone: normPhone, 
         password, 
         privacy, 
-        primaryAffinity: null, 
-        algorithmTraits: Array.from(selectedTraits) 
+        primaryAffinity: null,
+        userStatus: 'thriving ✨'
       };
 
       localStorage.setItem(`lei_user_${email}`, JSON.stringify(userData));
@@ -447,14 +486,12 @@ document.addEventListener('DOMContentLoaded', () => {
       stopWebcam();
       signUpView.classList.add('hidden');
       
-      // Padlock Unlocks -> First-time space selection (Requirement 2: chosen only once)
       triggerPadlockUnlock(() => {
         spacePortalView.classList.remove('hidden');
       });
     });
   }
 
-  // 9. Sign In Submission -> GOES DIRECTLY TO CHOSEN SPACE (Requirement 2)
   if (signInForm) {
     signInForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -478,7 +515,6 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('lei_active_session', JSON.stringify(user));
       signInView.classList.add('hidden');
 
-      // Unlocks straight to their previously selected sanctuary space without prompting portal
       triggerPadlockUnlock(() => {
         const destSpace = user.primaryAffinity || 'all';
         enterPlatformDirectly(destSpace);
@@ -486,7 +522,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 10. Padlock Sequence & Complete Transition to IVORY
   function triggerPadlockUnlock(onComplete) {
     publicNav.classList.add('hidden');
     padlockOverlay.classList.remove('hidden');
@@ -503,7 +538,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2400);
   }
 
-  // 11. Sanctuary Space Selection (First time commitment)
   const portalBtns = document.querySelectorAll('.portal-enter-btn');
   portalBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -528,12 +562,7 @@ document.addEventListener('DOMContentLoaded', () => {
     appPlatformView.classList.remove('hidden');
     updateSpaceDropdownUI(spaceId);
 
-    const spaceTitles = {
-      cis: 'Cis Space',
-      trans: 'Trans Space',
-      all: 'All Welcome'
-    };
-
+    const spaceTitles = { cis: 'Cis Space', trans: 'Trans Space', all: 'All Welcome' };
     const targetTitle = spaceTitles[spaceId] || 'All Welcome';
     currentSpaceLabel.innerText = targetTitle;
     updateBannerNotice(spaceId, targetTitle);
@@ -546,6 +575,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (activeSession.username) {
       userDropdownHandle.innerText = activeSession.username;
     }
+    if (activeSession.userStatus && userStatusPillMini) {
+      userStatusPillMini.innerText = `Status: ${activeSession.userStatus}`;
+    }
   }
 
   function updateSpaceDropdownUI(primaryAffinity) {
@@ -556,7 +588,6 @@ document.addEventListener('DOMContentLoaded', () => {
       optCis.classList.remove('locked-option');
       cisStatusTag.innerText = 'Your Space';
       cisStatusTag.style.color = '#c29352';
-
       optTrans.classList.add('locked-option');
       transStatusTag.innerText = '🔒 View Mode';
       transStatusTag.style.color = '#786b62';
@@ -564,7 +595,6 @@ document.addEventListener('DOMContentLoaded', () => {
       optTrans.classList.remove('locked-option');
       transStatusTag.innerText = 'Your Space';
       transStatusTag.style.color = '#c29352';
-
       optCis.classList.add('locked-option');
       cisStatusTag.innerText = '🔒 View Mode';
       cisStatusTag.style.color = '#786b62';
@@ -589,7 +619,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 12. Dropdown Space Switcher (Requirement 2: Interacting with all spaces except cross cis/trans)
   if (spaceDropdownTrigger) {
     spaceDropdownTrigger.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -640,7 +669,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 13. Appeal Modal
   if (openAppealModalBtn) {
     openAppealModalBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -648,22 +676,19 @@ document.addEventListener('DOMContentLoaded', () => {
       appealModal.classList.add('active');
     });
   }
-
   if (closeAppealBtn) {
     closeAppealBtn.addEventListener('click', () => appealModal.classList.remove('active'));
   }
-
   if (appealForm) {
     appealForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const target = document.getElementById('appealTargetSpace').value;
-      alert(`Your appeal to switch to ${target === 'cis' ? 'Cis Lèi Space' : 'Trans Lèi Space'} has been submitted to the female moderation council. We will review your request within 24 hours.`);
+      alert(`Your appeal to switch to ${target === 'cis' ? 'Cis Lèi Space' : 'Trans Lèi Space'} has been submitted.`);
       appealForm.reset();
       appealModal.classList.remove('active');
     });
   }
 
-  // 14. Tabs Switcher
   appTabs.forEach(tab => {
     tab.addEventListener('click', () => {
       appTabs.forEach(t => t.classList.remove('active'));
@@ -675,7 +700,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 15. Feed Likes & Publishing
   window.toggleLike = function(btn) {
     const countEl = btn.querySelector('.like-count');
     let count = parseInt(countEl.innerText);
@@ -725,7 +749,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 16. USA CITY MEETUPS (ANY US CITY & STATE FILTERING - Requirement 4)
   function filterUSAMeetups() {
     const searchVal = citySearchInput ? citySearchInput.value.toLowerCase().trim() : '';
     const selectedState = stateFilterSelect ? stateFilterSelect.value : 'ALL';
@@ -756,7 +779,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       btn.classList.add('joined');
       btn.innerText = '✓ RSVP Confirmed (Added to Group Chat)';
-      alert('RSVP confirmed! You were automatically added to this meetup\'s private Girlfriends Group Chat.');
+      alert('RSVP confirmed! Added to meetup group chat.');
     }
   };
 
@@ -768,58 +791,68 @@ document.addEventListener('DOMContentLoaded', () => {
       createMeetupForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const city = document.getElementById('meetupCityInput').value.trim();
-        const state = document.getElementById('meetupStateInput').value;
         const title = document.getElementById('meetupTitleInput').value.trim();
         const venue = document.getElementById('meetupVenueInput').value.trim();
-        const desc = document.getElementById('meetupDescInput').value.trim();
         const user = JSON.parse(localStorage.getItem('lei_active_session') || '{}');
 
         const newCard = document.createElement('div');
         newCard.className = 'meetup-card';
         newCard.setAttribute('data-city', city);
-        newCard.setAttribute('data-state', state);
         newCard.innerHTML = `
-          <div class="meetup-badge-row">
-            <span class="city-tag">📍 ${city}, ${state} (USA)</span>
-            <span class="safety-verified-tag">🛡️ Verified Safe Public Location</span>
-          </div>
+          <div class="meetup-badge-row"><span class="city-tag">📍 ${city} (USA)</span><span class="safety-verified-tag">🛡️ Verified Safe</span></div>
           <h3 class="meetup-title">${title}</h3>
-          <p class="meetup-organizer">Organized by <strong>${user.username || '@sister'}</strong> (${user.name || 'You'})</p>
-          <p class="meetup-desc">${desc}</p>
-          <div class="meetup-meta">
-            <span>🗓️ ${venue}</span>
-            <span>👥 1 Sister Attending (You)</span>
-          </div>
+          <p class="meetup-organizer">Organized by <strong>${user.username || '@sister'}</strong></p>
+          <div class="meetup-meta"><span>🗓️ ${venue}</span><span>👥 1 Sister Attending</span></div>
           <button class="btn-join-meetup joined">✓ Host Attending</button>
         `;
         meetupsGrid.prepend(newCard);
         createMeetupForm.reset();
         createMeetupModal.classList.remove('active');
-        alert(`Your USA sisterhood meetup in ${city}, ${state} is live!`);
-        filterUSAMeetups();
+        alert(`Meetup in ${city} is live!`);
       });
     }
   }
 
-  // 17. Fizz Vent Wall
+  if (openCampusSosModalBtn && campusSosModal && closeCampusSosModalBtn) {
+    openCampusSosModalBtn.addEventListener('click', () => campusSosModal.classList.add('active'));
+    closeCampusSosModalBtn.addEventListener('click', () => campusSosModal.classList.remove('active'));
+
+    if (campusSosForm) {
+      campusSosForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = document.getElementById('campusSosTitle').value;
+        const loc = document.getElementById('campusSosLoc').value;
+        const desc = document.getElementById('campusSosDesc').value;
+        const user = JSON.parse(localStorage.getItem('lei_active_session') || '{}');
+
+        const sosCard = document.createElement('div');
+        sosCard.className = 'meetup-card';
+        sosCard.innerHTML = `
+          <div class="meetup-badge-row"><span class="city-tag">🎓 ${user.college || 'College'}</span><span class="safety-verified-tag">🚨 Urgent Campus SOS</span></div>
+          <h3 class="meetup-title">${title}</h3>
+          <p class="meetup-organizer">Posted by <strong>${user.username || '@student'}</strong></p>
+          <p class="meetup-desc">${desc}</p>
+          <div class="meetup-meta"><span>📍 ${loc}</span><span>⚡ Active Request</span></div>
+          <button class="btn-join-meetup joined" onclick="alert('Dispatched!')">I Can Help! (DM)</button>
+        `;
+        campusSosGrid.prepend(sosCard);
+        campusSosForm.reset();
+        campusSosModal.classList.remove('active');
+        alert('Campus SOS broadcasted!');
+      });
+    }
+  }
+
   if (postFizzBtn && fizzInput) {
     postFizzBtn.addEventListener('click', () => {
       const text = fizzInput.value.trim();
       if (!text) return;
-
-      const randomSisterNum = Math.floor(Math.random() * 800) + 100;
       const card = document.createElement('div');
       card.className = 'fizz-card';
       card.innerHTML = `
-        <div class="fizz-meta">
-          <span class="fizz-anon-tag">Anonymous Sister #${randomSisterNum} • Just now</span>
-          <span class="fizz-topic-pill">Unfiltered Vent</span>
-        </div>
+        <div class="fizz-meta"><span class="fizz-anon-tag">Anonymous Sister • Just now</span><span class="fizz-topic-pill">Vent</span></div>
         <p class="fizz-content">"${text}"</p>
-        <div class="fizz-reaction-row">
-          <button class="fizz-react" onclick="incrementFizz(this)">❤️ <span>We hear you (1)</span></button>
-          <button class="fizz-react" onclick="incrementFizz(this)">🫂 <span>Sending strength (0)</span></button>
-        </div>
+        <div class="fizz-reaction-row"><button class="fizz-react" onclick="incrementFizz(this)">❤️ <span>We hear you (1)</span></button></div>
       `;
       fizzFeed.prepend(card);
       fizzInput.value = '';
@@ -836,82 +869,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // 18. DMs & Group Chats
-  dmContacts.forEach(contact => {
-    contact.addEventListener('click', () => {
-      dmContacts.forEach(c => c.classList.remove('active'));
-      contact.classList.add('active');
-
-      const partnerName = contact.getAttribute('data-chat-partner');
-      const partnerHandle = contact.getAttribute('data-chat-handle');
-      dmPartnerTitle.innerText = partnerName;
-      dmPartnerSub.innerText = `${partnerHandle} • Active Sanctuary Member`;
-    });
-  });
-
-  if (sendDmBtn && dmInput) {
-    function sendDirectMsg() {
-      const txt = dmInput.value.trim();
-      if (!txt) return;
-
-      const bubble = document.createElement('div');
-      bubble.className = 'dm-bubble me';
-      bubble.innerHTML = `
-        <p>${txt}</p>
-        <span class="dm-timestamp">Just now</span>
-      `;
-      dmStream.appendChild(bubble);
-      dmInput.value = '';
-      dmStream.scrollTop = dmStream.scrollHeight;
-    }
-
-    sendDmBtn.addEventListener('click', sendDirectMsg);
-    dmInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendDirectMsg();
-    });
-  }
-
-  if (shareLocationInDmBtn) {
-    shareLocationInDmBtn.addEventListener('click', () => {
-      const bubble = document.createElement('div');
-      bubble.className = 'dm-bubble me';
-      bubble.innerHTML = `
-        <p>📍 <strong>Live Location Shared:</strong> Midtown, Atlanta, GA (Live for next 45 min)</p>
-        <span class="dm-timestamp">Just now</span>
-      `;
-      dmStream.appendChild(bubble);
-      dmStream.scrollTop = dmStream.scrollHeight;
-      alert('Live location beacon pinned into this chat.');
-    });
-  }
-
-  if (createNewGroupBtn) {
-    createNewGroupBtn.addEventListener('click', () => {
-      const gname = prompt('Enter a name for your new Girlfriends Group Chat:');
-      if (gname) {
-        alert(`Group "${gname}" created! You can now invite your girl friends via secret link.`);
-      }
-    });
-  }
-
-  // Anonymous Hotline
-  if (startAnonCallBtn && anonCallModal && closeAnonCallBtn) {
-    startAnonCallBtn.addEventListener('click', () => anonCallModal.classList.add('active'));
-    closeAnonCallBtn.addEventListener('click', () => anonCallModal.classList.remove('active'));
-  }
-
-  if (startCallConnectBtn) {
-    startCallConnectBtn.addEventListener('click', () => {
-      startCallConnectBtn.innerText = 'Connecting to available sister...';
-      setTimeout(() => {
-        alert('Connected to Sister #419 in encrypted anonymous listening mode. Audio session open.');
-        anonCallModal.classList.remove('active');
-        startCallConnectBtn.innerText = 'Match with a Listening Sister';
-      }, 1500);
-    });
-  }
-
-  // 19. Lèi AI Assistant Chatbot (Requirement 5)
   if (sendAiBtn && aiInputText) {
     function sendAiMessage() {
       const txt = aiInputText.value.trim();
@@ -919,223 +876,64 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const userBubble = document.createElement('div');
       userBubble.className = 'ai-bubble user';
-      userBubble.innerHTML = `
-        <p>${txt}</p>
-        <span class="ai-timestamp">You • Just now</span>
-      `;
+      userBubble.innerHTML = `<p>${txt}</p><span class="ai-timestamp">You • Just now</span>`;
       aiMessagesStream.appendChild(userBubble);
       aiInputText.value = '';
       aiMessagesStream.scrollTop = aiMessagesStream.scrollHeight;
 
-      // AI Response simulation tailored for women's wellness, study, safety
       setTimeout(() => {
-        let reply = "I hear you, sister. Remember to take a deep breath; you're doing wonderfully. If you need any campus safety escorts, sanitary products, or study resources right now, let me know.";
+        let reply = "I hear you, sister. Remember to take a deep breath; you're doing wonderfully.";
         const lower = txt.toLowerCase();
-
-        if (lower.includes('pad') || lower.includes('period') || lower.includes('sanitary') || lower.includes('gsu')) {
-          reply = "🚨 **Emergency Campus Aid Triggered:** I've notified 3 vetted student sisters near GSU Library North who carry spare menstrual products. Check your campus DM ping or head to the Student Center info desk!";
-        } else if (lower.includes('career') || lower.includes('resume') || lower.includes('interview')) {
-          reply = "💼 **Career Guidance:** Let's elevate your profile! Make sure your resume emphasizes measurable impact. Would you like me to review your bullet points or give you a salary negotiation script?";
-        } else if (lower.includes('sad') || lower.includes('overwhelmed') || lower.includes('anxious')) {
-          reply = "🌿 **Gentle Reminder:** It is completely okay to pause. Close your eyes, drop your shoulders away from your ears, and take 3 deep belly breaths. You are safe in this sanctuary.";
+        if (lower.includes('pad') || lower.includes('period') || lower.includes('sanitary') || lower.includes('gsu') || lower.includes('college')) {
+          reply = "🚨 **Emergency Campus Aid Triggered:** I've notified 3 vetted student sisters near you who carry spare menstrual products.";
         }
-
         const aiBubble = document.createElement('div');
         aiBubble.className = 'ai-bubble ai';
-        aiBubble.innerHTML = `
-          <p>${reply}</p>
-          <span class="ai-timestamp">Lèi AI • Just now</span>
-        `;
+        aiBubble.innerHTML = `<p>${reply}</p><span class="ai-timestamp">Lèi AI • Just now</span>`;
         aiMessagesStream.appendChild(aiBubble);
         aiMessagesStream.scrollTop = aiMessagesStream.scrollHeight;
       }, 700);
     }
-
     sendAiBtn.addEventListener('click', sendAiMessage);
-    aiInputText.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendAiMessage();
-    });
+    aiInputText.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendAiMessage(); });
   }
 
-  // 20. Discord Hubs & Age Gating
-  channelLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      channelLinks.forEach(l => l.classList.remove('active'));
-      link.classList.add('active');
-
-      const channelName = link.innerText;
-      currentChannelHeading.innerText = channelName;
-      const ageReq = link.getAttribute('data-age-req');
-
-      if (ageReq && !verifiedAgeTiers.has(ageReq)) {
-        ageGateWall.classList.remove('hidden');
-        if (ageReq === '18') {
-          document.getElementById('ageGateTitle').innerText = '18+ Intimacy & Sex Discussion';
-        } else if (ageReq === '21') {
-          document.getElementById('ageGateTitle').innerText = '21+ Wine & Spirits Lounge';
-        } else if (ageReq === 'teen') {
-          document.getElementById('ageGateTitle').innerText = 'Teen Sanctuary (Ages 13-19 Only)';
-        }
-      } else {
-        ageGateWall.classList.add('hidden');
-      }
-    });
-  });
-
-  if (verifyAgeActionBtn) {
-    verifyAgeActionBtn.addEventListener('click', () => ageVerifyModal.classList.add('active'));
-  }
-
-  window.confirmAgeTier = function(tier) {
-    verifiedAgeTiers.add(tier);
-    ageVerifyModal.classList.remove('active');
-    ageGateWall.classList.add('hidden');
-    alert(`Age tier verified! You now have unlocked access.`);
-  };
-
-  if (closeAgeModalBtn) {
-    closeAgeModalBtn.addEventListener('click', () => ageVerifyModal.classList.remove('active'));
-  }
-
-  if (sendChatBtn && chatInput) {
-    function sendDiscordMsg() {
-      const txt = chatInput.value.trim();
-      if (!txt) return;
-      const user = JSON.parse(localStorage.getItem('lei_active_session') || '{}');
-      const name = user.name || 'You';
-
-      const msgEl = document.createElement('div');
-      msgEl.className = 'chat-msg';
-      msgEl.innerHTML = `
-        <span class="chat-avatar">🌸</span>
-        <div class="msg-body">
-          <div class="msg-meta">
-            <span class="msg-author">${name}</span>
-            <span class="msg-time">Just now</span>
-          </div>
-          <div class="msg-text">${txt}</div>
-        </div>
-      `;
-      chatMessages.appendChild(msgEl);
-      chatInput.value = '';
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    sendChatBtn.addEventListener('click', sendDiscordMsg);
-    chatInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendDiscordMsg();
-    });
-  }
-
-  // 21. Safety Beacon Modal
   if (openSafetyBeaconBtn && safetyBeaconModal && closeBeaconModalBtn) {
     openSafetyBeaconBtn.addEventListener('click', () => safetyBeaconModal.classList.add('active'));
     closeBeaconModalBtn.addEventListener('click', () => safetyBeaconModal.classList.remove('active'));
   }
-
   if (activateBeaconActionBtn) {
-    activateBeaconActionBtn.addEventListener('click', () => {
-      alert('Safety Beacon broadcasted to your emergency circle! Live tracking active.');
-      safetyBeaconModal.classList.remove('active');
-    });
+    activateBeaconActionBtn.addEventListener('click', () => { alert('Safety Beacon broadcasted!'); safetyBeaconModal.classList.remove('active'); });
   }
-
   if (triggerSosAlertBtn) {
-    triggerSosAlertBtn.addEventListener('click', () => {
-      alert('🚨 EMERGENCY SOS ACTIVATED: Coordinates dispatched to 14 nearby verified sisters and emergency contacts.');
-      safetyBeaconModal.classList.remove('active');
-    });
+    triggerSosAlertBtn.addEventListener('click', () => { alert('🚨 EMERGENCY SOS DISPATCHED!'); safetyBeaconModal.classList.remove('active'); });
   }
 
-  // 22. Invite Friends Link
   if (openInviteModalBtn && inviteFriendsModal && closeInviteModalBtn) {
-    openInviteModalBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      userDropdownMenu.classList.add('hidden');
-      inviteFriendsModal.classList.add('active');
-    });
+    openInviteModalBtn.addEventListener('click', (e) => { e.stopPropagation(); userDropdownMenu.classList.add('hidden'); inviteFriendsModal.classList.add('active'); });
     closeInviteModalBtn.addEventListener('click', () => inviteFriendsModal.classList.remove('active'));
   }
-
   if (copyInviteBtn && inviteLinkInput) {
-    copyInviteBtn.addEventListener('click', () => {
-      inviteLinkInput.select();
-      navigator.clipboard.writeText(inviteLinkInput.value);
-      copyInviteBtn.innerText = 'Copied!';
-      setTimeout(() => copyInviteBtn.innerText = 'Copy', 1500);
-    });
+    copyInviteBtn.addEventListener('click', () => { inviteLinkInput.select(); navigator.clipboard.writeText(inviteLinkInput.value); copyInviteBtn.innerText = 'Copied!'; setTimeout(() => copyInviteBtn.innerText = 'Copy', 1500); });
   }
 
-  // 23. Settings Modal & Permanent Account Deletion
   if (openSettingsModalBtn && settingsModal && closeSettingsModalBtn) {
-    openSettingsModalBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      userDropdownMenu.classList.add('hidden');
-      settingsModal.classList.add('active');
-    });
+    openSettingsModalBtn.addEventListener('click', (e) => { e.stopPropagation(); userDropdownMenu.classList.add('hidden'); settingsModal.classList.add('active'); });
     closeSettingsModalBtn.addEventListener('click', () => settingsModal.classList.remove('active'));
-  }
-
-  if (togglePrivacyBtn) {
-    togglePrivacyBtn.addEventListener('click', () => {
-      const activeUser = JSON.parse(localStorage.getItem('lei_active_session') || '{}');
-      const isPublic = activeUser.privacy === 'public';
-      activeUser.privacy = isPublic ? 'private' : 'public';
-      togglePrivacyBtn.innerText = isPublic ? 'Private' : 'Public';
-      localStorage.setItem('lei_active_session', JSON.stringify(activeUser));
-      alert(`Account visibility switched to ${activeUser.privacy}.`);
-    });
   }
 
   if (deleteAccountActionBtn) {
     deleteAccountActionBtn.addEventListener('click', () => {
-      const confirmed = confirm('Are you completely sure you want to permanently delete your Lèi account? All your posts, group chats, verified tokens, and history will be permanently erased.');
-      if (confirmed) {
-        const promptHandle = prompt('Type your username to confirm permanent deletion:');
-        const activeUser = JSON.parse(localStorage.getItem('lei_active_session') || '{}');
-        if (promptHandle && promptHandle.replace('@', '') === activeUser.username.replace('@', '')) {
-          localStorage.removeItem(`lei_user_${activeUser.email}`);
-          localStorage.removeItem(`lei_user_${activeUser.username.toLowerCase()}`);
-          if (activeUser.phone) {
-            localStorage.removeItem(`lei_phone_${activeUser.phone}`);
-          }
-          localStorage.removeItem('lei_active_session');
-          alert('Your account and all associated data have been permanently deleted from Lèi.');
-          window.location.reload();
-        } else {
-          alert('Username confirmation did not match. Deletion cancelled.');
-        }
-      }
+      const confirmed = confirm('Permanently delete your Lèi account?');
+      if (confirmed) { localStorage.clear(); alert('Account deleted.'); window.location.reload(); }
     });
   }
 
-  // 24. Report Impersonator or Violation
   if (openReportModalBtn && reportModal && closeReportBtn) {
-    openReportModalBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      userDropdownMenu.classList.add('hidden');
-      reportModal.classList.add('active');
-    });
+    openReportModalBtn.addEventListener('click', (e) => { e.stopPropagation(); userDropdownMenu.classList.add('hidden'); reportModal.classList.add('active'); });
     closeReportBtn.addEventListener('click', () => reportModal.classList.remove('active'));
-
-    if (reportForm) {
-      reportForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const reason = document.getElementById('reportReason').value;
-        const target = document.getElementById('reportTargetUser').value;
-        alert(`High-priority report submitted for ${target}. The female moderation council reviews impersonation and safety violations with urgency.`);
-        reportForm.reset();
-        reportModal.classList.remove('active');
-      });
-    }
   }
 
-  // 25. Mutual Aid Donation
-  window.simulateDonate = function(recipient) {
-    alert(`Thank you for lifting up ${recipient}! Your $25 peer micro-grant was transferred with 0% platform fee.`);
-  };
-
-  // 26. Log Out -> Switch Back to Mauve Gate
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
       localStorage.removeItem('lei_active_session');
@@ -1147,7 +945,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 27. About Modal
   if (aboutBtn && aboutModal && closeAboutBtn) {
     aboutBtn.addEventListener('click', () => aboutModal.classList.add('active'));
     closeAboutBtn.addEventListener('click', () => aboutModal.classList.remove('active'));

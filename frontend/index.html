@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-mauve" id="appBody">
-  <!-- Ambient backdrop glows -->
+  <!-- Ambient dynamic backdrop glows -->
   <div class="ambient-glow glow-1"></div>
   <div class="ambient-glow glow-2"></div>
   <div class="ambient-glow glow-3"></div>
@@ -190,7 +190,7 @@
     </div>
   </section>
 
-  <!-- STEP 3: CELEBRATION (NO MORE "YAY!") -->
+  <!-- STEP 3: CELEBRATION -->
   <section class="page-view hidden" id="readyView">
     <div class="content-card auth-card celebration-card">
       <canvas id="celebrationCanvas" class="celebration-canvas"></canvas>
@@ -255,10 +255,13 @@
 
         <button type="submit" class="primary-btn submit-btn">Sign In to Lèi</button>
       </form>
+      <div class="auth-switch-row">
+        <span>New to Lèi?</span> <button type="button" class="text-link-btn" id="switchToSignUp">Create Account</button>
+      </div>
     </div>
   </section>
 
-  <!-- STEP 5: CREATE ACCOUNT (STRICT UNIQUE PHONE & EMAIL) -->
+  <!-- STEP 5: CREATE ACCOUNT -->
   <section class="page-view hidden" id="signUpView">
     <div class="content-card form-card">
       <button class="back-link" id="backToReadyFromSignUp">
@@ -271,7 +274,7 @@
       <div class="view-header">
         <span class="step-tag">Sanctuary Verification</span>
         <h2 class="view-title">Join L&egrave;i</h2>
-        <p class="view-desc">An exclusive space reserved solely for women. Only 1 account allowed per phone number &amp; email.</p>
+        <p class="view-desc">An exclusive space reserved solely for women. Only 1 account allowed per phone &amp; email.</p>
       </div>
 
       <form id="signUpForm" class="auth-form">
@@ -289,6 +292,11 @@
         </div>
 
         <div class="form-group">
+          <label>College / University (For Campus SOS &amp; Student Aid)</label>
+          <input type="text" id="regCollege" placeholder="e.g. Georgia State University (GSU)" required>
+        </div>
+
+        <div class="form-group">
           <label>Account Privacy</label>
           <div class="privacy-toggle-row">
             <label class="radio-pill">
@@ -300,7 +308,6 @@
               <span>Private Account</span>
             </label>
           </div>
-          <span class="phone-hint">Private accounts require mutual approval to view your feed.</span>
         </div>
 
         <div class="form-group">
@@ -313,7 +320,6 @@
           <input type="password" id="regPassword" placeholder="••••••••" required>
         </div>
 
-        <!-- Phone SMS Verification with Real Code Generation -->
         <div class="form-group">
           <label>Mobile Number (USA Only, Must be unique)</label>
           <div class="phone-input-row">
@@ -323,7 +329,6 @@
           <span class="phone-hint" id="otpStatusHint">A 6-digit code will be sent to your real mobile number via SMS.</span>
         </div>
 
-        <!-- Real OTP Entry Input -->
         <div class="form-group otp-input-group hidden" id="otpEntryContainer">
           <label>Enter 6-Digit SMS Verification Code</label>
           <div class="otp-action-row">
@@ -335,7 +340,6 @@
           </div>
         </div>
 
-        <!-- Liveness Real-Person Camera Verification -->
         <div class="form-group camera-group">
           <label>Real-Person Liveness Check</label>
           <p class="camera-desc">Take a quick 2-second real-time selfie to prevent bots and duplicate spam profiles.</p>
@@ -353,7 +357,6 @@
           <input type="hidden" id="faceVerified" value="false">
         </div>
 
-        <!-- Explicit Covenant -->
         <div class="covenant-box">
           <label class="checkbox-container">
             <input type="checkbox" id="covenantGender" required>
@@ -374,6 +377,9 @@
 
         <button type="submit" class="primary-btn submit-btn" id="submitRegBtn">Complete &amp; Enter</button>
       </form>
+      <div class="auth-switch-row">
+        <span>Already have an account?</span> <button type="button" class="text-link-btn" id="switchToSignIn">Sign In</button>
+      </div>
     </div>
   </section>
 
@@ -392,11 +398,7 @@
     </div>
   </div>
 
-  <!-- ====================================================
-       INSIDE LÈI (IVORY THEME): CHOSEN ONCE ON INITIAL SIGNUP
-       ==================================================== -->
-
-  <!-- REVEAL 1: CHOOSE SANCTUARY SPACE (Only seen when creating account the first time) -->
+  <!-- REVEAL 1: CHOOSE SANCTUARY SPACE -->
   <section class="page-view hidden" id="spacePortalView">
     <div class="content-card wide-card portal-card">
       <div class="view-header">
@@ -432,12 +434,11 @@
     </div>
   </section>
 
-  <!-- REVEAL 2: FULL LÈI SUPER-APP ECOSYSTEM (IVORY THEME) -->
+  <!-- REVEAL 2: FULL LÈI SUPER-APP ECOSYSTEM WITH LEFT-SIDE SIDEBAR NAVIGATION -->
   <div class="app-layout hidden" id="appPlatformView">
     
-    <!-- MINIMAL, CLEAN IVORY NAVBAR -->
+    <!-- TOP NAVBAR (Clean & Uncrowded: Brand & Right Actions Only) -->
     <nav class="app-navbar">
-      <!-- Zone 1: Brand & Space Selection -->
       <div class="nav-brand-section">
         <span class="nav-brand-text">L&egrave;i</span>
         <div class="active-space-pill" id="spaceDropdownTrigger">
@@ -446,7 +447,6 @@
           <span class="dropdown-caret">▾</span>
         </div>
 
-        <!-- Space Switcher Dropdown -->
         <div class="space-dropdown hidden" id="spaceDropdownMenu">
           <div class="space-dropdown-header">SANCTUARY REALMS</div>
           <div class="space-option" id="optCisSpace" data-space="Cis Lèi Space" data-space-id="cis">
@@ -467,39 +467,6 @@
         </div>
       </div>
 
-      <!-- Zone 2: Centered Primary Navigation -->
-      <div class="nav-center-tabs">
-        <button class="app-tab active" data-tab="feedTab">
-          <span class="tab-icon">📱</span>
-          <span class="tab-label">Feed</span>
-        </button>
-        <button class="app-tab" data-tab="meetupsTab">
-          <span class="tab-icon">📍</span>
-          <span class="tab-label">US Meetups</span>
-        </button>
-        <button class="app-tab" data-tab="fizzTab">
-          <span class="tab-icon">🤫</span>
-          <span class="tab-label">Vents</span>
-        </button>
-        <button class="app-tab" data-tab="dmsTab">
-          <span class="tab-icon">💬</span>
-          <span class="tab-label">Chats</span>
-        </button>
-        <button class="app-tab" data-tab="hubsTab">
-          <span class="tab-icon">🎙️</span>
-          <span class="tab-label">Hubs</span>
-        </button>
-        <button class="app-tab" data-tab="aiAssistantTab">
-          <span class="tab-icon">🌸</span>
-          <span class="tab-label">Lèi AI</span>
-        </button>
-        <button class="app-tab" data-tab="aidTab">
-          <span class="tab-icon">🤝</span>
-          <span class="tab-label">Aid</span>
-        </button>
-      </div>
-
-      <!-- Zone 3: Essential Actions & Profile Dropdown -->
       <div class="nav-actions-section">
         <button class="btn-safety-beacon" id="openSafetyBeaconBtn" title="Emergency Location Share / Safe Walk">
           <span class="beacon-pulse"></span>
@@ -515,10 +482,11 @@
             <div class="dropdown-user-header">
               <strong id="userDropdownName">Sister</strong>
               <span id="userDropdownHandle">@username</span>
+              <span class="user-status-pill-mini" id="userStatusPillMini">Status: Thriving ✨</span>
             </div>
             <div class="dropdown-divider"></div>
             <button class="user-dropdown-item" id="openInviteModalBtn">💌 Invite Friends</button>
-            <button class="user-dropdown-item" id="openSettingsModalBtn">⚙️ Account Settings</button>
+            <button class="user-dropdown-item" id="openSettingsModalBtn">⚙️ Account &amp; Status Settings</button>
             <button class="user-dropdown-item item-report" id="openReportModalBtn">⚠️ Report Impersonator</button>
             <div class="dropdown-divider"></div>
             <button class="user-dropdown-item item-logout" id="logoutBtn">Log Out</button>
@@ -532,328 +500,373 @@
       <span id="spaceBannerText">Currently in <strong>All Welcome Lèi Space</strong> — Open to all women.</span>
     </div>
 
-    <!-- MODULE 1: FOR YOU FEED -->
-    <section class="platform-tab-pane" id="feedTab">
-      <div class="feed-container">
-        <div class="algo-indicator-card" id="algoPill">
-          <span>✨ <strong>Your Personalized Algorithm:</strong> Tuning content to your selected feelings &amp; energies: <em><span id="activeAlgoTraits">ambitious, healing, reflective</span></em>.</span>
-        </div>
+    <!-- MAIN APP BODY: LEFT SIDEBAR NAVIGATION + CONTENT PANE -->
+    <div class="app-main-workspace">
+      <!-- LEFT-SIDE SIDEBAR NAVIGATION -->
+      <aside class="left-sidebar-nav">
+        <span class="sidebar-section-title">NAVIGATION</span>
+        <button class="app-tab active" data-tab="feedTab"><span class="tab-icon">📱</span><span class="tab-label">Feed</span></button>
+        <button class="app-tab" data-tab="wellbeingTab"><span class="tab-icon">🌸</span><span class="tab-label">Wellbeing &amp; Status</span></button>
+        <button class="app-tab" data-tab="campusTab"><span class="tab-icon">🎓</span><span class="tab-label">Campus SOS</span></button>
+        <button class="app-tab" data-tab="meetupsTab"><span class="tab-icon">📍</span><span class="tab-label">US Meetups</span></button>
+        <button class="app-tab" data-tab="activismTab"><span class="tab-icon">✊🏽</span><span class="tab-label">Planning Arrests</span></button>
+        <button class="app-tab" data-tab="fizzTab"><span class="tab-icon">🤫</span><span class="tab-label">Vent Wall</span></button>
+        <button class="app-tab" data-tab="dmsTab"><span class="tab-icon">💬</span><span class="tab-label">Chats &amp; Groups</span></button>
+        <button class="app-tab" data-tab="hubsTab"><span class="tab-icon">🎙️</span><span class="tab-label">Discord Hubs</span></button>
+        <button class="app-tab" data-tab="aiAssistantTab"><span class="tab-icon">🤖</span><span class="tab-label">Lèi AI Concierge</span></button>
+        <button class="app-tab" data-tab="aidTab"><span class="tab-icon">🤝</span><span class="tab-label">Mutual Aid</span></button>
+      </aside>
 
-        <div class="create-post-card">
-          <div class="post-header-row">
-            <span class="avatar-ph">🌸</span>
-            <textarea id="postInputText" rows="2" placeholder="Share a reflection, milestone, ask for assistance, or post random thoughts with your sisters..."></textarea>
-          </div>
-          <div class="post-actions-row">
-            <div class="post-type-selectors">
-              <button class="btn-attach" id="simPhotoBtn">📷 Photo</button>
-              <button class="btn-attach" id="simVideoPostBtn">🎬 Short Clip</button>
-              <button class="btn-attach" id="postThoughtBtn">💭 Thought</button>
+      <!-- CONTENT PANES -->
+      <div class="app-content-area">
+        <!-- MODULE 1: FEED -->
+        <section class="platform-tab-pane" id="feedTab">
+          <div class="feed-container">
+            <div class="algo-indicator-card" id="algoPill">
+              <span>✨ <strong>Your Sanctuary Feed:</strong> Authentic connections, career insights, and sisterhood discussions.</span>
             </div>
-            <button class="btn-publish-post" id="publishPostBtn">Publish to Feed</button>
-          </div>
-        </div>
 
-        <div class="posts-stream" id="postsStream">
-          <article class="feed-post-card tiktok-format" data-traits="ambitious empowered career">
-            <div class="post-top">
-              <div class="author-info">
-                <span class="post-avatar">💼</span>
-                <div>
-                  <h4 class="author-name">Clara Vance</h4>
-                  <span class="author-handle">@claravance • <span class="badge-tag">#Ambitious</span></span>
-                </div>
+            <div class="create-post-card">
+              <div class="post-header-row">
+                <span class="avatar-ph">🌸</span>
+                <textarea id="postInputText" rows="2" placeholder="Share a reflection, milestone, ask for assistance, or post random thoughts with your sisters..."></textarea>
               </div>
-              <span class="algo-match-badge">🎯 98% Match for your energy</span>
-            </div>
-            <div class="post-visual-box tiktok-clip">
-              <div class="tiktok-overlay">
-                <span class="clip-play-badge">▶ 0:45 • Career Growth Breakdown</span>
-                <p class="clip-title">"3 Salary Negotiation Rules I Used To Double My Software Engineering Offer"</p>
+              <div class="post-actions-row">
+                <div class="post-type-selectors">
+                  <button class="btn-attach" id="simPhotoBtn">📷 Photo</button>
+                  <button class="btn-attach" id="simVideoPostBtn">🎬 Short Clip</button>
+                  <button class="btn-attach" id="postThoughtBtn">💭 Thought</button>
+                </div>
+                <button class="btn-publish-post" id="publishPostBtn">Publish to Feed</button>
               </div>
             </div>
-            <div class="post-reactions">
-              <button class="like-btn" onclick="toggleLike(this)">♥ <span class="like-count">612</span></button>
-              <button class="comment-icon">💬 84</button>
-              <button class="share-icon">↗ 21</button>
-              <button class="bookmark-icon">🔖</button>
-            </div>
-            <p class="post-caption">
-              <strong>claravance</strong> Never accept the first salary band offered. Here is the exact template I used to counter with confidence and grace! Drop questions below. 💻✨
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
 
-    <!-- MODULE 2: USA CITY MEETUPS -->
-    <section class="platform-tab-pane hidden" id="meetupsTab">
-      <div class="meetups-container">
-        <div class="meetups-hero-box">
-          <div class="meetups-header-info">
-            <h2>📍 USA Sisterhood City Circles &amp; Meetups</h2>
-            <p>Connect with verified female friends across <strong>any city in the United States</strong>. Search by city name or state to find or post coffee meetups, NFS (Need Female Friends) circles, or study sessions.</p>
-          </div>
-          <button class="primary-btn" id="openCreateMeetupBtn">+ Create US Meetup</button>
-        </div>
-
-        <div class="usa-filter-controls">
-          <div class="search-input-wrap">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="citySearchInput" placeholder="Search any US city (e.g. Atlanta, Austin, Denver, Chicago)...">
-          </div>
-          <div class="state-select-wrap">
-            <select id="stateFilterSelect">
-              <option value="ALL">All 50 US States</option>
-              <option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option>
-              <option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option>
-              <option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="FL">Florida</option>
-              <option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option>
-              <option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option>
-              <option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option>
-              <option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option>
-              <option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option>
-              <option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option>
-              <option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option>
-              <option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option>
-              <option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option>
-              <option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option>
-              <option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option>
-              <option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option>
-              <option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option>
-              <option value="WI">Wisconsin</option><option value="WY">Wyoming</option><option value="DC">Washington, D.C.</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="meetups-grid" id="meetupsGrid">
-          <div class="meetup-card" data-city="Atlanta" data-state="GA">
-            <div class="meetup-badge-row">
-              <span class="city-tag">📍 Atlanta, GA</span>
-              <span class="safety-verified-tag">🛡️ Verified Safe Public Location</span>
-            </div>
-            <h3 class="meetup-title">"NFS in Atlanta! Anyone down for Piedmont Park picnic &amp; pottery this Saturday?"</h3>
-            <p class="meetup-organizer">Organized by <strong>@maya_atl</strong> (Maya Lin)</p>
-            <p class="meetup-desc">Just moved to Midtown Atlanta for a tech job and looking to build my core group of girl friends! Bringing fresh pastries, tea, and painting boards. Let's hang!</p>
-            <div class="meetup-meta">
-              <span>🗓️ Saturday, 2:00 PM</span>
-              <span>👥 7 Sisters Attending</span>
-            </div>
-            <button class="btn-join-meetup" onclick="toggleJoinMeetup(this)">RSVP &amp; Join Group Chat</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- MODULE 3: FIZZ-STYLE ANONYMOUS VENT WALL -->
-    <section class="platform-tab-pane hidden" id="fizzTab">
-      <div class="fizz-container">
-        <div class="fizz-hero-card">
-          <div class="fizz-header">
-            <h2>🤫 The Sisterhood Vent Wall</h2>
-            <p>Speak with 100% anonymity. No usernames or identifiers. Share raw thoughts, vulnerability, postpartum struggles, dating dilemmas, or ask for peer guidance safely.</p>
-          </div>
-
-          <div class="fizz-composer">
-            <textarea id="fizzInput" rows="3" placeholder="Share an anonymous confession, vent, or question without judgment..."></textarea>
-            <div class="fizz-actions">
-              <span class="anon-badge">🔒 Posting anonymously as Sister #842</span>
-              <button class="btn-fizz-post" id="postFizzBtn">Post to Vent Wall</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="fizz-feed" id="fizzFeed">
-          <div class="fizz-card">
-            <div class="fizz-meta">
-              <span class="fizz-anon-tag">Anonymous Sister • 25m ago</span>
-              <span class="fizz-topic-pill">Career &amp; Burnout</span>
-            </div>
-            <p class="fizz-content">
-              "I just got passed over for a promotion in my firm by a junior male peer who joined 6 months ago. I feel completely invisible and humiliated..."
-            </p>
-            <div class="fizz-reaction-row">
-              <button class="fizz-react" onclick="incrementFizz(this)">❤️ <span>We hear you (42)</span></button>
-              <button class="fizz-react" onclick="incrementFizz(this)">🫂 <span>Sending strength (28)</span></button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- MODULE 4: DIRECT MESSAGES -->
-    <section class="platform-tab-pane hidden" id="dmsTab">
-      <div class="dms-layout">
-        <aside class="dms-sidebar">
-          <div class="dms-top-action">
-            <button class="btn-anon-hotline" id="startAnonCallBtn"><span>🎭</span> Anonymous Listening</button>
-            <button class="btn-create-group" id="createNewGroupBtn"><span>👯‍♀️</span> + Girlfriends Group</button>
-          </div>
-
-          <div class="dms-list-header">DIRECT MESSAGES</div>
-          <div class="dm-contact active" data-chat-partner="Elena Rostova" data-chat-handle="@elena_r">
-            <span class="dm-avatar">🌸</span>
-            <div class="dm-info">
-              <div class="dm-name">Elena Rostova</div>
-              <div class="dm-last-snippet">See you at the salon tomorrow!</div>
-            </div>
-          </div>
-        </aside>
-
-        <main class="dms-chat-window">
-          <div class="dm-chat-header">
-            <div>
-              <h3 id="dmPartnerTitle">Elena Rostova</h3>
-              <span class="dm-partner-sub" id="dmPartnerSub">@elena_r • Active in Sanctuary</span>
-            </div>
-            <div class="dm-header-actions">
-              <button class="btn-share-loc-dm" id="shareLocationInDmBtn" title="Share live location">📍 Share Location</button>
-              <button class="btn-dm-more">•••</button>
-            </div>
-          </div>
-
-          <div class="dm-messages-stream" id="dmStream">
-            <div class="dm-bubble partner">
-              <p>Hi sister! Just wanted to make sure you made it to your car safely after the evening event.</p>
-              <span class="dm-timestamp">10:15 AM</span>
-            </div>
-          </div>
-
-          <div class="dm-input-row">
-            <input type="text" id="dmInput" placeholder="Send a message or voice note to your sisters...">
-            <button class="btn-send-dm" id="sendDmBtn">Send</button>
-          </div>
-        </main>
-      </div>
-    </section>
-
-    <!-- MODULE 5: DISCORD-STYLE HUBS -->
-    <section class="platform-tab-pane hidden" id="hubsTab">
-      <div class="discord-layout">
-        <aside class="discord-sidebar">
-          <div class="channels-section">
-            <span class="section-title">LIFE STAGES &amp; SISTERHOOD</span>
-            <div class="channel-link" data-channel="postpartum"># 🤱-postpartum-spaces</div>
-            <div class="channel-link" data-channel="newbrides"># 💍-new-brides-weddings</div>
-            <div class="channel-link" data-channel="college"># 🎓-college-students-hub</div>
-            <div class="channel-link" data-channel="firstgen"># 🌟-first-gen-graduates</div>
-          </div>
-
-          <div class="channels-section">
-            <span class="section-title">EDUCATION &amp; CAREERS</span>
-            <div class="channel-link active" data-channel="stem"># 🔬-women-in-stem-jobs</div>
-            <div class="channel-link" data-channel="highered"># 📚-higher-education-grad</div>
-            <div class="channel-link" data-channel="career"># 💼-career-growth-pivots</div>
-            <div class="channel-link" data-channel="mentorship"># 🤝-mentorship-matching</div>
-            <div class="channel-link" data-channel="funding"># 🏛️-funding-and-grants</div>
-          </div>
-
-          <div class="channels-section age-locked-section">
-            <span class="section-title">AGE-GATED SANCTUARIES</span>
-            <div class="channel-link locked" data-channel="sex" data-age-req="18">🔒 # 18+-intimacy-and-sex</div>
-            <div class="channel-link locked" data-channel="alcohol" data-age-req="21">🔒 # 21+-wine-and-spirits</div>
-            <div class="channel-link locked" data-channel="teens" data-age-req="teen">🔒 # teen-pregnancy-and-mothers</div>
-          </div>
-        </aside>
-
-        <main class="discord-chat-panel">
-          <div class="chat-header">
-            <h3 id="currentChannelHeading"># 🔬-women-in-stem-jobs</h3>
-            <span class="channel-topic" id="currentChannelTopic">Research opportunities, lab positions, internships, and engineering mentorship.</span>
-          </div>
-
-          <div class="age-gate-wall hidden" id="ageGateWall">
-            <div class="lock-icon">🔒</div>
-            <h4 id="ageGateTitle">Age Restricted Sanctuary</h4>
-            <p id="ageGateDesc">You must verify your age tier to participate in this discussion.</p>
-            <button class="primary-btn" id="verifyAgeActionBtn">Verify My Age Tier</button>
-          </div>
-
-          <div class="chat-messages" id="chatMessages">
-            <div class="chat-msg">
-              <span class="chat-avatar">🔬</span>
-              <div class="msg-body">
-                <div class="msg-meta">
-                  <span class="msg-author">Dr. Aris Thorne</span>
-                  <span class="msg-time">Today at 9:45 AM</span>
+            <div class="posts-stream" id="postsStream">
+              <article class="feed-post-card tiktok-format">
+                <div class="post-top">
+                  <div class="author-info">
+                    <span class="post-avatar">💼</span>
+                    <div>
+                      <h4 class="author-name">Clara Vance</h4>
+                      <span class="author-handle">@claravance • <span class="badge-tag">#Ambitious</span></span>
+                    </div>
+                  </div>
                 </div>
-                <div class="msg-text">
-                  Our bioinformatics lab in Atlanta is hiring 2 summer undergraduate research fellows! Paid, housing stipend included.
+                <div class="post-visual-box tiktok-clip">
+                  <div class="tiktok-overlay">
+                    <span class="clip-play-badge">▶ 0:45 • Career Growth Breakdown</span>
+                    <p class="clip-title">"3 Salary Negotiation Rules I Used To Double My Software Engineering Offer"</p>
+                  </div>
                 </div>
+                <div class="post-reactions">
+                  <button class="like-btn" onclick="toggleLike(this)">♥ <span class="like-count">612</span></button>
+                  <button class="comment-icon">💬 84</button>
+                  <button class="share-icon">↗ 21</button>
+                  <button class="bookmark-icon">🔖</button>
+                </div>
+                <p class="post-caption">
+                  <strong>claravance</strong> Never accept the first salary band offered. Here is the exact template I used to counter with confidence and grace! Drop questions below. 💻✨
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <!-- MODULE 1.2: WELLBEING SPACE & TEAMS-STYLE STATUS SETTER -->
+        <section class="platform-tab-pane hidden" id="wellbeingTab">
+          <div class="wellbeing-container">
+            <div class="wellbeing-hero-card">
+              <div class="wellbeing-hero-icon">🌸</div>
+              <div>
+                <h2>Sanctuary Wellbeing &amp; Status</h2>
+                <p>Set your current state of being (Teams-style status) and access trauma-informed mental health grounding resources.</p>
+              </div>
+            </div>
+
+            <div class="status-selector-card">
+              <h3>Set Your Current Status ("What part of HER are you today?")</h3>
+              <p class="status-sub-desc">Choose your energetic state or mood. This updates your profile status pill and displays in the wellbeing circle. It does not alter your standard feed.</p>
+
+              <div class="options-grid expanded-grid" id="statusOptionsGrid">
+                <button class="trait-card" data-trait="ambitious"><div class="trait-spark">✦</div><div class="trait-name">ambitious</div><div class="selection-check">✓</div></button>
+                <button class="trait-card" data-trait="resourceful"><div class="trait-spark">✦</div><div class="trait-name">resourceful</div><div class="selection-check">✓</div></button>
+                <button class="trait-card" data-trait="thriving"><div class="trait-spark">✦</div><div class="trait-name">thriving</div><div class="selection-check">✓</div></button>
+                <button class="trait-card" data-trait="connected"><div class="trait-spark">✦</div><div class="trait-name">connected</div><div class="selection-check">✓</div></button>
+                <button class="trait-card" data-trait="expressive"><div class="trait-spark">✦</div><div class="trait-name">expressive</div><div class="selection-check">✓</div></button>
+                <button class="trait-card" data-trait="evolving"><div class="trait-spark">✦</div><div class="trait-name">evolving</div><div class="selection-check">✓</div></button>
+                <button class="trait-card" data-trait="sad"><div class="trait-spark">💧</div><div class="trait-name">sad</div><div class="selection-check">✓</div></button>
+                <button class="trait-card" data-trait="healing"><div class="trait-spark">🌿</div><div class="trait-name">healing</div><div class="selection-check">✓</div></button>
+                <button class="trait-card" data-trait="overwhelmed"><div class="trait-spark">🌪️</div><div class="trait-name">overwhelmed</div><div class="selection-check">✓</div></button>
+                <button class="trait-card" data-trait="anxious"><div class="trait-spark">⚡</div><div class="trait-name">anxious</div><div class="selection-check">✓</div></button>
+                <button class="trait-card" data-trait="serene"><div class="trait-spark">☁️</div><div class="trait-name">serene</div><div class="selection-check">✓</div></button>
+                <button class="trait-card" data-trait="joyful"><div class="trait-spark">✨</div><div class="trait-name">joyful</div><div class="selection-check">✓</div></button>
+                <button class="trait-card" data-trait="lonely"><div class="trait-spark">🌙</div><div class="trait-name">lonely</div><div class="selection-check">✓</div></button>
+                <button class="trait-card" data-trait="hopeful"><div class="trait-spark">🕊️</div><div class="trait-name">hopeful</div><div class="selection-check">✓</div></button>
+                <button class="trait-card" data-trait="burnout"><div class="trait-spark">🕯️</div><div class="trait-name">burnout</div><div class="selection-check">✓</div></button>
+                <button class="trait-card" data-trait="empowered"><div class="trait-spark">👑</div><div class="trait-name">empowered</div><div class="selection-check">✓</div></button>
+              </div>
+
+              <div class="status-action-row">
+                <button class="primary-btn" id="saveStatusBtn">Update My Status</button>
+              </div>
+            </div>
+
+            <div class="wellness-guides-grid">
+              <div class="wellness-guide-card">
+                <h4>🌿 5-Minute Nervous System Reset</h4>
+                <p>Guided breathing and somatic grounding exercise for moments of burnout or overwhelm.</p>
+                <button class="btn-attach" onclick="alert('Starting 5-minute breathing guide: Inhale for 4 seconds, hold for 4, exhale for 6.')">Start Exercise</button>
+              </div>
+              <div class="wellness-guide-card">
+                <h4>🌙 Gentle Self-Compassion Check-in</h4>
+                <p>Reflective prompts to untangle self-judgment and restore inner peace.</p>
+                <button class="btn-attach" onclick="alert('Prompt: What is one heavy expectation you can release today?')">Open Prompt</button>
               </div>
             </div>
           </div>
+        </section>
 
-          <div class="chat-input-bar">
-            <input type="text" id="chatInput" placeholder="Message #women-in-stem-jobs...">
-            <button class="btn-send-chat" id="sendChatBtn">Send</button>
-          </div>
-        </main>
-      </div>
-    </section>
+        <!-- MODULE 1.5: CAMPUS SOS -->
+        <section class="platform-tab-pane hidden" id="campusTab">
+          <div class="meetups-container">
+            <div class="meetups-hero-box">
+              <div class="meetups-header-info">
+                <h2>🎓 Campus SOS &amp; Student Network</h2>
+                <p>Connect instantly with other Leis at your registered college. Need a sanitary pad urgently in the library? Looking for a dorm safety escort or textbook swap?</p>
+              </div>
+              <button class="primary-btn" id="openCampusSosModalBtn">+ Post Campus SOS</button>
+            </div>
 
-    <!-- MODULE 6: LÈI SISTER AI ASSISTANT -->
-    <section class="platform-tab-pane hidden" id="aiAssistantTab">
-      <div class="ai-assistant-container">
-        <div class="ai-hero-box">
-          <div class="ai-avatar-badge">🌸 AI</div>
-          <div>
-            <h2>L&egrave;i Sister AI Concierge</h2>
-            <p>Your confidential, trauma-informed AI wellness partner. Ask questions about cycle tracking, study schedules, career pivots, mental wellness, or safety guidance anytime.</p>
-          </div>
-        </div>
-
-        <div class="ai-chat-card">
-          <div class="ai-messages-stream" id="aiMessagesStream">
-            <div class="ai-bubble ai">
-              <p>Hello, sister. I am your Lèi AI companion. How are you feeling today? Whether you need academic advice, study motivation, a sanitary product locator on campus, or emotional support, I am here for you.</p>
-              <span class="ai-timestamp">Lèi AI • Just now</span>
+            <div class="meetups-grid" id="campusSosGrid">
+              <div class="meetup-card">
+                <div class="meetup-badge-row">
+                  <span class="city-tag">🎓 Georgia State University (GSU)</span>
+                  <span class="safety-verified-tag">🚨 Urgent Campus SOS</span>
+                </div>
+                <h3 class="meetup-title">"Emergency! I'm at GSU Library North (2nd floor) and desperately need a sanitary pad right now!"</h3>
+                <p class="meetup-organizer">Posted by <strong>@student_gsu</strong> • 4 mins ago</p>
+                <p class="meetup-desc">Caught completely unawares during my finals study session. If any sister is in Library North right now, please drop by study desk #14 or DM me.</p>
+                <div class="meetup-meta"><span>📍 GSU Library North</span><span>⚡ Status: Active Request</span></div>
+                <button class="btn-join-meetup joined" onclick="alert('Campus SOS message dispatched to nearby GSU students!')">I Can Bring One! (DM Sister)</button>
+              </div>
             </div>
           </div>
-          <div class="ai-input-bar">
-            <input type="text" id="aiInputText" placeholder="Ask Lèi AI anything (e.g. 'I'm at GSU and need a sanitary pad right now' or 'Help me outline my career resume')...">
-            <button class="btn-send-ai" id="sendAiBtn">Send</button>
-          </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <!-- MODULE 7: MUTUAL AID -->
-    <section class="platform-tab-pane hidden" id="aidTab">
-      <div class="aid-container">
-        <div class="aid-hero-box">
-          <div class="aid-hero-text">
-            <h2>L&egrave;i Sisterhood Mutual Aid</h2>
-            <p>Direct peer-to-peer assistance for medical care, emergency housing, childcare, educational scholarships, and life transitions.</p>
-          </div>
-          <button class="primary-btn" id="openCreateAidModalBtn">+ Create Aid Request</button>
-        </div>
+        <!-- MODULE 2: USA CITY MEETUPS -->
+        <section class="platform-tab-pane hidden" id="meetupsTab">
+          <div class="meetups-container">
+            <div class="meetups-hero-box">
+              <div class="meetups-header-info">
+                <h2>📍 USA Sisterhood City Circles &amp; Meetups</h2>
+                <p>Connect with verified female friends across <strong>any city in the United States</strong>. Search by city name or state to find or post coffee meetups, NFS circles, or study sessions.</p>
+              </div>
+              <button class="primary-btn" id="openCreateMeetupBtn">+ Create US Meetup</button>
+            </div>
 
-        <div class="aid-cards-grid">
-          <div class="aid-card">
-            <span class="aid-category">Health &amp; Surgery</span>
-            <h3 class="aid-title">Emergency Gender-Affirming Surgery Recovery Support</h3>
-            <p class="aid-author">Organized by <strong>@sasha_w</strong> for Sasha W.</p>
-            <p class="aid-story">Taking unpaid leave to undergo emergency surgery. Seeking assistance to cover 6 weeks of rent and post-op medication.</p>
-            <div class="progress-bar-wrap">
-              <div class="progress-bar-fill" style="width: 74%;"></div>
+            <div class="usa-filter-controls">
+              <div class="search-input-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="citySearchInput" placeholder="Search any US city (e.g. Atlanta, Austin, Denver, Chicago)...">
+              </div>
+              <div class="state-select-wrap">
+                <select id="stateFilterSelect">
+                  <option value="ALL">All 50 US States</option>
+                  <option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option>
+                  <option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option>
+                  <option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="FL">Florida</option>
+                  <option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option>
+                  <option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option>
+                  <option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option>
+                  <option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option>
+                  <option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option>
+                  <option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option>
+                  <option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option>
+                  <option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option>
+                  <option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option>
+                  <option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option>
+                  <option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option>
+                  <option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option>
+                  <option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option>
+                  <option value="WI">Wisconsin</option><option value="WY">Wyoming</option><option value="DC">Washington, D.C.</option>
+                </select>
+              </div>
             </div>
-            <div class="aid-metrics">
-              <span><strong>$3,700</strong> raised of $5,000</span>
-              <span>48 donors</span>
+
+            <div class="meetups-grid" id="meetupsGrid">
+              <div class="meetup-card" data-city="Atlanta" data-state="GA">
+                <div class="meetup-badge-row"><span class="city-tag">📍 Atlanta, GA</span><span class="safety-verified-tag">🛡️ Verified Safe Public Location</span></div>
+                <h3 class="meetup-title">"NFS in Atlanta! Anyone down for Piedmont Park picnic &amp; pottery this Saturday?"</h3>
+                <p class="meetup-organizer">Organized by <strong>@maya_atl</strong> (Maya Lin)</p>
+                <p class="meetup-desc">Just moved to Midtown Atlanta for a tech job and looking to build my core group of girl friends!</p>
+                <div class="meetup-meta"><span>🗓️ Saturday, 2:00 PM</span><span>👥 7 Sisters Attending</span></div>
+                <button class="btn-join-meetup" onclick="toggleJoinMeetup(this)">RSVP &amp; Join Group Chat</button>
+              </div>
             </div>
-            <button class="btn-donate" onclick="simulateDonate('Sasha')">Support Sister ($25)</button>
           </div>
-        </div>
+        </section>
+
+        <!-- MODULE 2.5: PLANNING ARRESTS -->
+        <section class="platform-tab-pane hidden" id="activismTab">
+          <div class="meetups-container">
+            <div class="meetups-hero-box">
+              <div class="meetups-header-info">
+                <h2>✊🏽 Planning Arrests &amp; Protest Safety Hub</h2>
+                <p>Dedicated legal defense coordination, emergency rights hotlines, and jail support check-ins for reproductive rights marches and community activism.</p>
+              </div>
+              <button class="btn-sos-emergency" onclick="alert('🚨 LEGAL EMERGENCY DISPATCH: Connecting securely to National Lawyers Guild reproductive rights defense hotline.')">📞 Call Emergency Legal Hotline</button>
+            </div>
+
+            <div class="meetups-grid">
+              <div class="meetup-card">
+                <div class="meetup-badge-row"><span class="city-tag">⚖️ Legal Safety</span><span class="safety-verified-tag">🛡️ Encrypted Protocol</span></div>
+                <h3 class="meetup-title">Know Your Rights: Peaceful Assembly &amp; Protest Safety</h3>
+                <p class="meetup-organizer">Curated by Lèi Legal Defense Coalition</p>
+                <p class="meetup-desc">Never answer police questions without a lawyer present. Write emergency legal numbers in permanent marker on your arm.</p>
+                <div class="meetup-meta"><span>Status: Active Guide</span></div>
+                <button class="btn-join-meetup joined" onclick="alert('Protest safety checklist downloaded securely.')">Download Offline Safety Card</button>
+              </div>
+              <div class="meetup-card">
+                <div class="meetup-badge-row"><span class="city-tag">⏰ Jail Support Timer</span><span class="safety-verified-tag">🛡️ Automated Check-in</span></div>
+                <h3 class="meetup-title">Protest Buddy &amp; Auto-Checkin Safety Timer</h3>
+                <p class="meetup-organizer">Safety Check-in Tool</p>
+                <p class="meetup-desc">Set a timer before attending a rally. If you don't check in by the designated hour, your encrypted emergency contacts receive your coordinates.</p>
+                <div class="meetup-meta"><span>Timer: 4 Hours Default</span></div>
+                <button class="btn-join-meetup" onclick="alert('Safety timer activated.')">Activate Protest Safety Timer</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MODULE 3: FIZZ VENT WALL -->
+        <section class="platform-tab-pane hidden" id="fizzTab">
+          <div class="fizz-container">
+            <div class="fizz-hero-card">
+              <div class="fizz-header">
+                <h2>🤫 The Sisterhood Vent Wall</h2>
+                <p>Speak with 100% anonymity. No usernames or identifiers. Share raw thoughts, vulnerability, or ask for peer guidance safely.</p>
+              </div>
+              <div class="fizz-composer">
+                <textarea id="fizzInput" rows="3" placeholder="Share an anonymous confession, vent, or question without judgment..."></textarea>
+                <div class="fizz-actions">
+                  <span class="anon-badge">🔒 Posting anonymously as Sister #842</span>
+                  <button class="btn-fizz-post" id="postFizzBtn">Post to Vent Wall</button>
+                </div>
+              </div>
+            </div>
+            <div class="fizz-feed" id="fizzFeed">
+              <div class="fizz-card">
+                <div class="fizz-meta"><span class="fizz-anon-tag">Anonymous Sister • 25m ago</span><span class="fizz-topic-pill">Career &amp; Burnout</span></div>
+                <p class="fizz-content">"I just got passed over for a promotion in my firm by a junior male peer who joined 6 months ago..."</p>
+                <div class="fizz-reaction-row"><button class="fizz-react" onclick="incrementFizz(this)">❤️ <span>We hear you (42)</span></button></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MODULE 4: DMS -->
+        <section class="platform-tab-pane hidden" id="dmsTab">
+          <div class="dms-layout">
+            <aside class="dms-sidebar">
+              <div class="dms-top-action">
+                <button class="btn-anon-hotline" id="startAnonCallBtn"><span>🎭</span> Anonymous Listening</button>
+                <button class="btn-create-group" id="createNewGroupBtn"><span>👯‍♀️</span> + Girlfriends Group</button>
+              </div>
+              <div class="dms-list-header">DIRECT MESSAGES</div>
+              <div class="dm-contact active" data-chat-partner="Elena Rostova" data-chat-handle="@elena_r">
+                <span class="dm-avatar">🌸</span>
+                <div class="dm-info"><div class="dm-name">Elena Rostova</div><div class="dm-last-snippet">See you at the salon tomorrow!</div></div>
+              </div>
+            </aside>
+            <main class="dms-chat-window">
+              <div class="dm-chat-header">
+                <div><h3 id="dmPartnerTitle">Elena Rostova</h3><span class="dm-partner-sub" id="dmPartnerSub">@elena_r • Active in Sanctuary</span></div>
+                <div class="dm-header-actions"><button class="btn-share-loc-dm" id="shareLocationInDmBtn">📍 Share Location</button></div>
+              </div>
+              <div class="dm-messages-stream" id="dmStream">
+                <div class="dm-bubble partner"><p>Hi sister! Just wanted to make sure you made it to your car safely after the evening event.</p><span class="dm-timestamp">10:15 AM</span></div>
+              </div>
+              <div class="dm-input-row">
+                <input type="text" id="dmInput" placeholder="Send a message or voice note...">
+                <button class="btn-send-dm" id="sendDmBtn">Send</button>
+              </div>
+            </main>
+          </div>
+        </section>
+
+        <!-- MODULE 5: HUBS -->
+        <section class="platform-tab-pane hidden" id="hubsTab">
+          <div class="discord-layout">
+            <aside class="discord-sidebar">
+              <div class="channels-section">
+                <span class="section-title">LIFE STAGES</span>
+                <div class="channel-link active" data-channel="stem"># 🔬-women-in-stem-jobs</div>
+                <div class="channel-link" data-channel="postpartum"># 🤱-postpartum-spaces</div>
+              </div>
+            </aside>
+            <main class="discord-chat-panel">
+              <div class="chat-header"><h3 id="currentChannelHeading"># 🔬-women-in-stem-jobs</h3><span class="channel-topic" id="currentChannelTopic">Research opportunities and engineering mentorship.</span></div>
+              <div class="chat-messages" id="chatMessages">
+                <div class="chat-msg"><span class="chat-avatar">🔬</span><div class="msg-body"><div class="msg-meta"><span class="msg-author">Dr. Aris Thorne</span><span class="msg-time">Today at 9:45 AM</span></div><div class="msg-text">Our bioinformatics lab in Atlanta is hiring 2 summer undergraduate fellows!</div></div></div>
+              </div>
+              <div class="chat-input-bar">
+                <input type="text" id="chatInput" placeholder="Message #women-in-stem-jobs...">
+                <button class="btn-send-chat" id="sendChatBtn">Send</button>
+              </div>
+            </main>
+          </div>
+        </section>
+
+        <!-- MODULE 6: AI ASSISTANT -->
+        <section class="platform-tab-pane hidden" id="aiAssistantTab">
+          <div class="ai-assistant-container">
+            <div class="ai-hero-box">
+              <div class="ai-avatar-badge">🌸 AI</div>
+              <div>
+                <h2>L&egrave;i Sister AI Concierge</h2>
+                <p>Your confidential, trauma-informed AI wellness partner. Ask questions about cycle tracking, study schedules, or campus SOS help anytime.</p>
+              </div>
+            </div>
+            <div class="ai-chat-card">
+              <div class="ai-messages-stream" id="aiMessagesStream">
+                <div class="ai-bubble ai"><p>Hello, sister. I am your Lèi AI companion. How are you feeling today?</p><span class="ai-timestamp">Lèi AI • Just now</span></div>
+              </div>
+              <div class="ai-input-bar">
+                <input type="text" id="aiInputText" placeholder="Ask Lèi AI anything...">
+                <button class="btn-send-ai" id="sendAiBtn">Send</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MODULE 7: MUTUAL AID -->
+        <section class="platform-tab-pane hidden" id="aidTab">
+          <div class="aid-container">
+            <div class="aid-hero-box">
+              <div class="aid-hero-text">
+                <h2>L&egrave;i Sisterhood Mutual Aid</h2>
+                <p>Direct peer-to-peer assistance for medical care, emergency housing, and life transitions.</p>
+              </div>
+              <button class="primary-btn">+ Create Aid Request</button>
+            </div>
+            <div class="aid-cards-grid">
+              <div class="aid-card">
+                <span class="aid-category">Health &amp; Surgery</span>
+                <h3 class="aid-title">Emergency Gender-Affirming Surgery Recovery Support</h3>
+                <p class="aid-author">Organized by <strong>@sasha_w</strong> for Sasha W.</p>
+                <p class="aid-story">Taking unpaid leave to undergo emergency surgery. Seeking assistance to cover rent.</p>
+                <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width: 74%;"></div></div>
+                <div class="aid-metrics"><span><strong>$3,700</strong> raised of $5,000</span><span>48 donors</span></div>
+                <button class="btn-donate" onclick="simulateDonate('Sasha')">Support Sister ($25)</button>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
-    </section>
+    </div>
   </div>
 
-  <!-- ====================================================
-       MODALS: REAL SMS, BEACON, INVITE, SETTINGS & REPORTING
-       ==================================================== -->
-
-  <!-- MODAL: DEDICATED REAL SMS VERIFICATION POPUP -->
+  <!-- MODALS -->
   <div class="modal-backdrop" id="smsModal">
     <div class="about-card sms-modal-card">
       <button class="close-modal-btn" id="closeSmsModalBtn">&times;</button>
@@ -868,253 +881,120 @@
           <button type="button" class="btn-auth-primary" id="confirmSmsCodeBtn">Confirm Code</button>
         </div>
       </div>
-      <span class="invite-note">Carrier SMS message rates may apply. Strictly 1 account per real mobile number.</span>
     </div>
   </div>
 
-  <!-- MODAL: SAFETY BEACON & LIVE LOCATION SHARING -->
+  <div class="modal-backdrop" id="campusSosModal">
+    <div class="about-card report-card">
+      <button class="close-modal-btn" id="closeCampusSosModalBtn">&times;</button>
+      <div class="about-icon">🎓</div>
+      <h2 class="about-title">Post Campus SOS</h2>
+      <p class="about-text">Need a sanitary pad, study notes, or an escort on campus right now? Broadcast to sisters at your college.</p>
+      <form id="campusSosForm" class="report-form">
+        <div class="form-group"><label>Urgent Request / Need</label><input type="text" id="campusSosTitle" placeholder="e.g. Need a sanitary pad at GSU Library North" required></div>
+        <div class="form-group"><label>Specific Campus Location</label><input type="text" id="campusSosLoc" placeholder="e.g. 2nd Floor Study Desks" required></div>
+        <div class="form-group"><label>Details</label><textarea id="campusSosDesc" rows="2" placeholder="Let sisters know how to reach you..." required></textarea></div>
+        <button type="submit" class="btn-auth-primary">Broadcast Campus SOS</button>
+      </form>
+    </div>
+  </div>
+
   <div class="modal-backdrop" id="safetyBeaconModal">
     <div class="about-card beacon-modal-card">
       <button class="close-modal-btn" id="closeBeaconModalBtn">&times;</button>
-      <div class="beacon-icon-wrap">
-        <span class="beacon-core-icon">🛡️</span>
-        <div class="beacon-pulse-ring"></div>
-      </div>
+      <div class="beacon-icon-wrap"><span class="beacon-core-icon">🛡️</span><div class="beacon-pulse-ring"></div></div>
       <h2 class="about-title">Sisterhood Safety Beacon</h2>
-      <p class="about-text">
-        If you feel uncomfortable, are walking alone at night, or on a date with someone new, activate your beacon. Your live coordinates will be shared with your chosen emergency circle.
-      </p>
-
-      <div class="beacon-status-box" id="beaconStatusBox">
-        <div class="beacon-coord-row">
-          <span>Current Location:</span>
-          <strong id="beaconCoordText">Midtown, Atlanta, GA • Accuracy ± 5m</strong>
-        </div>
-        <div class="beacon-timer-row">
-          <span>Active Safety Timer:</span>
-          <strong id="beaconTimer">30:00 remaining</strong>
-        </div>
-      </div>
-
-      <div class="beacon-actions">
-        <button class="btn-activate-beacon" id="activateBeaconActionBtn">Broadcast Location to Girlfriends</button>
-        <button class="btn-sos-emergency" id="triggerSosAlertBtn">🚨 Immediate SOS Broadcast (Notify Nearby Sisters)</button>
-      </div>
+      <p class="about-text">If you feel uncomfortable or are walking alone at night, activate your beacon.</p>
+      <div class="beacon-status-box"><div class="beacon-coord-row"><span>Current Location:</span><strong>Midtown, Atlanta, GA</strong></div><div class="beacon-timer-row"><span>Active Timer:</span><strong>30:00 remaining</strong></div></div>
+      <div class="beacon-actions"><button class="btn-activate-beacon" id="activateBeaconActionBtn">Broadcast Location</button><button class="btn-sos-emergency" id="triggerSosAlertBtn">🚨 Immediate SOS Broadcast</button></div>
     </div>
   </div>
 
-  <!-- MODAL: INVITE FRIENDS -->
   <div class="modal-backdrop" id="inviteFriendsModal">
     <div class="about-card">
       <button class="close-modal-btn" id="closeInviteModalBtn">&times;</button>
       <div class="about-icon">💌</div>
       <h2 class="about-title">Invite Your Girlfriends</h2>
-      <p class="about-text">
-        Lèi grows through trusted sisterhood. Share your private invitation link with your friends to grant them verified access to the sanctuary.
-      </p>
-      <div class="invite-code-box">
-        <span class="invite-label">YOUR EXCLUSIVE INVITE LINK:</span>
-        <div class="invite-input-row">
-          <input type="text" id="inviteLinkInput" value="https://lei.sanctuary/invite/her-circle-9842" readonly>
-          <button class="btn-copy-invite" id="copyInviteBtn">Copy</button>
-        </div>
-      </div>
-      <span class="invite-note">Invited friends still undergo SMS &amp; real-person liveness check.</span>
+      <p class="about-text">Share your private invitation link with your friends.</p>
+      <div class="invite-code-box"><input type="text" id="inviteLinkInput" value="https://lei.sanctuary/invite/her-circle-9842" readonly><button class="btn-copy-invite" id="copyInviteBtn">Copy</button></div>
     </div>
   </div>
 
-  <!-- MODAL: ACCOUNT SETTINGS & DELETE ACCOUNT -->
   <div class="modal-backdrop" id="settingsModal">
     <div class="about-card settings-card">
       <button class="close-modal-btn" id="closeSettingsModalBtn">&times;</button>
       <div class="about-icon">⚙️</div>
-      <h2 class="about-title">Account Sanctuary Settings</h2>
-      
+      <h2 class="about-title">Account Settings</h2>
       <div class="settings-body">
-        <div class="setting-item">
-          <div>
-            <strong>Profile Visibility</strong>
-            <p class="setting-sub">Switch between Public and Private</p>
-          </div>
-          <button class="btn-toggle-privacy" id="togglePrivacyBtn">Public</button>
-        </div>
-
-        <div class="setting-item delete-danger-zone">
-          <div>
-            <strong class="danger-title">Permanently Delete Account</strong>
-            <p class="setting-sub">Erase all your posts, DMs, verification records, and activity completely. This action cannot be undone.</p>
-          </div>
-          <button class="btn-delete-account" id="deleteAccountActionBtn">Delete Account</button>
-        </div>
+        <div class="setting-item"><div><strong>Profile Visibility</strong></div><button class="btn-toggle-privacy" id="togglePrivacyBtn">Public</button></div>
+        <div class="setting-item delete-danger-zone"><div><strong class="danger-title">Delete Account</strong></div><button class="btn-delete-account" id="deleteAccountActionBtn">Delete</button></div>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: REPORT NON-WOMAN IMPERSONATOR -->
   <div class="modal-backdrop" id="reportModal">
     <div class="about-card report-card">
       <button class="close-modal-btn" id="closeReportBtn">&times;</button>
       <div class="about-icon">🛡️</div>
-      <h2 class="about-title">Report Sanctuary Violation</h2>
-      <p class="about-text">
-        Help preserve our women-only space. If you have proof that an account holder is not a woman, or is violating community safety, report immediately.
-      </p>
-
+      <h2 class="about-title">Report Violation</h2>
       <form id="reportForm" class="report-form">
-        <div class="form-group">
-          <label>Violation Type</label>
-          <select id="reportReason" required>
-            <option value="">Select violation...</option>
-            <option value="not_a_woman">Proof account holder is NOT a woman (Male Impersonator)</option>
-            <option value="male_violation">Male participant in women-only space</option>
-            <option value="harassment">Harassment or exclusionary behavior</option>
-            <option value="burner_account">Suspicious burner account / automated bot</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Target Username (@handle)</label>
-          <input type="text" id="reportTargetUser" placeholder="@suspecthandle" required>
-        </div>
-
-        <div class="form-group">
-          <label>Proof &amp; Details</label>
-          <textarea id="reportDetails" rows="3" placeholder="Explain the evidence you have that this person is not a woman or violated safety..." required></textarea>
-        </div>
-
-        <button type="submit" class="btn-auth-primary">Submit High-Priority Report</button>
+        <div class="form-group"><label>Target Username</label><input type="text" id="reportTargetUser" placeholder="@suspecthandle" required></div>
+        <div class="form-group"><label>Details</label><textarea id="reportDetails" rows="3" placeholder="Reason..." required></textarea></div>
+        <button type="submit" class="btn-auth-primary">Submit Report</button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL: CREATE US CITY MEETUP -->
   <div class="modal-backdrop" id="createMeetupModal">
     <div class="about-card report-card">
       <button class="close-modal-btn" id="closeCreateMeetupBtn">&times;</button>
       <div class="about-icon">📍</div>
-      <h2 class="about-title">Host a US City Sisterhood Meetup</h2>
-      <p class="about-text">Create a safe public gathering in literally any city in the United States (e.g. "NFS in Atlanta", study circles, or coffee chats).</p>
-      
+      <h2 class="about-title">Host US Meetup</h2>
       <form id="createMeetupForm" class="report-form">
-        <div class="form-group">
-          <label>US City</label>
-          <input type="text" id="meetupCityInput" placeholder="e.g. Atlanta, Austin, Denver, Seattle" required>
-        </div>
-
-        <div class="form-group">
-          <label>US State</label>
-          <select id="meetupStateInput" required>
-            <option value="">Select US State...</option>
-            <option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option>
-            <option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option>
-            <option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="FL">Florida</option>
-            <option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option>
-            <option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option>
-            <option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option>
-            <option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option>
-            <option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option>
-            <option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option>
-            <option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option>
-            <option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option>
-            <option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option>
-            <option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option>
-            <option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option>
-            <option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option>
-            <option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option>
-            <option value="WI">Wisconsin</option><option value="WY">Wyoming</option><option value="DC">Washington, D.C.</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Catchy Title</label>
-          <input type="text" id="meetupTitleInput" placeholder="e.g. NFS in Atlanta! Coffee &amp; Book Swap" required>
-        </div>
-
-        <div class="form-group">
-          <label>Public Safe Venue &amp; Time</label>
-          <input type="text" id="meetupVenueInput" placeholder="e.g. Dancing Goats Coffee Midtown, Sunday @ 2pm" required>
-        </div>
-
-        <div class="form-group">
-          <label>Description</label>
-          <textarea id="meetupDescInput" rows="2" placeholder="Tell sisters what to expect..." required></textarea>
-        </div>
-
-        <button type="submit" class="btn-auth-primary">Post US City Meetup</button>
+        <div class="form-group"><label>US City</label><input type="text" id="meetupCityInput" placeholder="Atlanta, GA" required></div>
+        <div class="form-group"><label>Title</label><input type="text" id="meetupTitleInput" placeholder="Coffee &amp; Chat" required></div>
+        <div class="form-group"><label>Venue &amp; Time</label><input type="text" id="meetupVenueInput" placeholder="Starbucks, Sunday @ 2pm" required></div>
+        <button type="submit" class="btn-auth-primary">Post Meetup</button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL: SPACE AFFILIATION APPEAL -->
   <div class="modal-backdrop" id="appealModal">
     <div class="about-card report-card">
       <button class="close-modal-btn" id="closeAppealBtn">&times;</button>
       <div class="about-icon">📜</div>
-      <h2 class="about-title">Space Affiliation Appeal</h2>
-      <p class="about-text">
-        To preserve the sanctity and comfort of designated sisterhood spaces, identity space changes require moderation review.
-      </p>
-
+      <h2 class="about-title">Space Appeal</h2>
       <form id="appealForm" class="report-form">
-        <div class="form-group">
-          <label>Desired Sanctuary Space</label>
-          <select id="appealTargetSpace" required>
-            <option value="">Select space...</option>
-            <option value="cis">Cis Lèi Space</option>
-            <option value="trans">Trans Lèi Space</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Reason for Space Reassignment</label>
-          <textarea id="appealReason" rows="3" placeholder="Please share your journey with our female moderation council..." required></textarea>
-        </div>
-
-        <button type="submit" class="btn-auth-primary">Submit Appeal for Review</button>
+        <div class="form-group"><label>Desired Space</label><select id="appealTargetSpace" required><option value="cis">Cis Lèi Space</option><option value="trans">Trans Lèi Space</option></select></div>
+        <button type="submit" class="btn-auth-primary">Submit</button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL: AGE TIER VERIFICATION -->
   <div class="modal-backdrop" id="ageVerifyModal">
     <div class="about-card">
       <button class="close-modal-btn" id="closeAgeModalBtn">&times;</button>
       <div class="about-icon">🔒</div>
-      <h2 class="about-title">Verify Age Tier</h2>
-      <p class="about-text">Certain spaces are strictly age-protected for member safety and privacy.</p>
-      <div class="age-picker-row">
-        <button class="btn-age-select" onclick="confirmAgeTier('teen')">I am 13 - 19 (Teen)</button>
-        <button class="btn-age-select" onclick="confirmAgeTier('18')">I am 18+ (Adult)</button>
-        <button class="btn-age-select" onclick="confirmAgeTier('21')">I am 21+ (Legal Age)</button>
-      </div>
+      <h2 class="about-title">Verify Age</h2>
+      <div class="age-picker-row"><button class="btn-age-select" onclick="confirmAgeTier('18')">18+</button></div>
     </div>
   </div>
 
-  <!-- MODAL: ANONYMOUS SISTER LISTENING HOTLINE -->
   <div class="modal-backdrop" id="anonCallModal">
     <div class="about-card report-card">
       <button class="close-modal-btn" id="closeAnonCallBtn">&times;</button>
       <div class="about-icon">🎭</div>
-      <h2 class="about-title">Anonymous Sister Listening</h2>
-      <p class="about-text">
-        Connect with a vetted sister for 15 minutes of safe, non-judgmental listening. No names, handles, or phone numbers are shared.
-      </p>
-      <div class="call-connection-box">
-        <button class="btn-auth-primary" id="startCallConnectBtn">Match with a Listening Sister</button>
-      </div>
+      <h2 class="about-title">Anonymous Listening</h2>
+      <button class="btn-auth-primary" id="startCallConnectBtn">Match</button>
     </div>
   </div>
 
-  <!-- Sweet About Modal Dialog -->
   <div class="modal-backdrop" id="aboutModal">
     <div class="about-card">
       <button class="close-modal-btn" id="closeAboutBtn">&times;</button>
       <div class="about-icon">🌸</div>
       <h2 class="about-title">About L&egrave;i</h2>
-      <p class="about-text">
-        Named after the Italian word for <em>“Her”</em>, <strong>L&egrave;i</strong> is an exclusive social sanctuary built to help women connect, discover, and grow through every part of life.
-      </p>
-      <div class="about-footer">Crafted with care and grace.</div>
+      <p class="about-text">Exclusive social sanctuary built for women.</p>
     </div>
   </div>
 
