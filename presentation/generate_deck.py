@@ -1,43 +1,41 @@
 from pptx import Presentation
 from pptx.dml.color import RGBColor
-from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 from pptx.util import Inches, Pt
 
-
 W, H = 13.333, 7.5
-BG = RGBColor(18, 11, 16)
-INK = RGBColor(36, 28, 23)
-MUTED = RGBColor(120, 107, 98)
-MAUVE = RGBColor(135, 93, 120)
-PALE = RGBColor(244, 232, 238)
+DARK = RGBColor(18, 11, 16)
+MAUVE = RGBColor(67, 40, 58)
+MIST = RGBColor(238, 220, 230)
 GOLD = RGBColor(245, 196, 107)
 IVORY = RGBColor(252, 251, 249)
+INK = RGBColor(36, 28, 23)
+MUTED = RGBColor(120, 107, 98)
 GREEN = RGBColor(45, 138, 67)
-
 
 prs = Presentation()
 prs.slide_width = Inches(W)
 prs.slide_height = Inches(H)
 
 
-def box(slide, x, y, w, h, color, radius=False, transparency=0):
-    shape_type = MSO_SHAPE.ROUNDED_RECTANGLE if radius else MSO_SHAPE.RECTANGLE
-    shape = slide.shapes.add_shape(shape_type, Inches(x), Inches(y), Inches(w), Inches(h))
-    shape.fill.solid()
-    shape.fill.fore_color.rgb = color
-    shape.fill.transparency = transparency
-    shape.line.fill.background()
-    return shape
+def add_shape(slide, kind, x, y, w, h, color, rounded=False, transparency=0, rotation=0):
+    item = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE if rounded else kind, Inches(x), Inches(y), Inches(w), Inches(h))
+    item.fill.solid()
+    item.fill.fore_color.rgb = color
+    item.fill.transparency = transparency
+    item.line.fill.background()
+    item.rotation = rotation
+    return item
 
 
-def text(slide, value, x, y, w, h, size=18, color=INK, bold=False, font="Aptos", align=PP_ALIGN.LEFT):
-    shape = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h))
-    frame = shape.text_frame
+def add_text(slide, value, x, y, w, h, size=18, color=INK, bold=False, align=PP_ALIGN.LEFT, font="Aptos"):
+    item = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h))
+    frame = item.text_frame
     frame.clear()
     frame.word_wrap = True
-    frame.margin_left = Inches(0.02)
-    frame.margin_right = Inches(0.02)
+    frame.margin_left = Inches(0.03)
+    frame.margin_right = Inches(0.03)
     frame.vertical_anchor = MSO_ANCHOR.MIDDLE
     paragraph = frame.paragraphs[0]
     paragraph.alignment = align
@@ -47,179 +45,106 @@ def text(slide, value, x, y, w, h, size=18, color=INK, bold=False, font="Aptos",
     run.font.size = Pt(size)
     run.font.bold = bold
     run.font.color.rgb = color
-    return shape
+    return item
 
 
-def bullet_list(slide, items, x, y, w, h, size=18, color=INK):
-    shape = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h))
-    frame = shape.text_frame
-    frame.clear()
-    frame.word_wrap = True
-    frame.margin_left = Inches(0.04)
-    frame.margin_right = Inches(0.04)
-    for index, item in enumerate(items):
-        paragraph = frame.paragraphs[0] if index == 0 else frame.add_paragraph()
-        paragraph.text = item
-        paragraph.level = 0
-        paragraph.space_after = Pt(10)
-        paragraph.font.name = "Aptos"
-        paragraph.font.size = Pt(size)
-        paragraph.font.color.rgb = color
-        paragraph.bullet = True
-    return shape
+def add_lily(slide, x, y, scale=1):
+    for offset_x, offset_y in [(-28, 0), (-14, -22), (0, -32), (14, -22), (28, 0)]:
+        add_shape(slide, MSO_SHAPE.OVAL, x + (offset_x + 34) * scale, y + (offset_y + 30) * scale, 32 * scale, 70 * scale, RGBColor(185, 141, 169), True, 18, offset_x / 2)
+    add_shape(slide, MSO_SHAPE.OVAL, x + 30 * scale, y + 27 * scale, 40 * scale, 40 * scale, GOLD, True, 5)
+    add_shape(slide, MSO_SHAPE.RECTANGLE, x + 48 * scale, y + 62 * scale, 4 * scale, 145 * scale, RGBColor(90, 61, 82), rotation=-2)
 
 
-def base_slide(title, kicker, dark=False):
+def add_footer(slide, number):
+    add_text(slide, "LEI  /  Hackathon pitch", 0.72, 7.08, 4, 0.2, 9, MIST)
+    add_text(slide, f"0{number}", 12.1, 7.08, 0.5, 0.2, 9, GOLD, True, PP_ALIGN.RIGHT)
+
+
+def new_slide(dark=True):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    background = BG if dark else IVORY
-    box(slide, 0, 0, W, H, background)
-    text(slide, kicker.upper(), 0.72, 0.48, 4.5, 0.3, 10, GOLD if dark else MAUVE, True)
-    text(slide, title, 0.72, 0.84, 11.8, 0.72, 28, PALE if dark else INK, True, "Aptos Display")
-    box(slide, 0.72, 1.72, 1.1, 0.04, GOLD if dark else MAUVE)
+    add_shape(slide, MSO_SHAPE.RECTANGLE, 0, 0, W, H, DARK if dark else IVORY)
     return slide
 
 
-def footer(slide, number, dark=False):
-    text(slide, "LEI  /  Hackathon pitch", 0.72, 7.08, 4, 0.2, 9, PALE if dark else MUTED)
-    text(slide, str(number).zfill(2), 12.1, 7.08, 0.5, 0.2, 9, GOLD if dark else MAUVE, True, align=PP_ALIGN.RIGHT)
+def add_heading(slide, kicker, title, number):
+    add_text(slide, kicker.upper(), 0.72, 0.42, 5.5, 0.25, 10, GOLD, True)
+    add_text(slide, title, 0.72, 0.78, 11.6, 0.75, 29, MIST, True, font="Aptos Display")
+    add_shape(slide, MSO_SHAPE.RECTANGLE, 0.72, 1.68, 1.05, 0.04, GOLD)
+    add_footer(slide, number)
 
 
-# 1. Cover
-slide = prs.slides.add_slide(prs.slide_layouts[6])
-box(slide, 0, 0, W, H, BG)
-box(slide, 8.7, -0.8, 5.5, 9, MAUVE, True, 38)
-box(slide, 10.0, 1.0, 3.5, 5.7, GOLD, True, 72)
-text(slide, "LEI", 0.85, 1.0, 4.5, 0.8, 18, GOLD, True)
-text(slide, "From isolation\nto momentum.", 0.85, 2.0, 8.6, 1.8, 38, PALE, True, "Aptos Display")
-text(slide, "A protected ecosystem where women learn, grow careers,\nand build meaningful connections.", 0.9, 4.25, 7.3, 0.9, 20, PALE)
-text(slide, "Education  |  Career growth  |  Belonging", 0.9, 5.7, 7.3, 0.4, 13, GOLD, True)
-text(slide, "Hackathon demo", 0.9, 6.55, 3, 0.25, 10, PALE)
-footer(slide, 1, True)
+# Slide 1: The hook
+slide = new_slide()
+add_shape(slide, MSO_SHAPE.OVAL, 8.6, -1.0, 6.2, 7.0, MAUVE, True, 45)
+add_shape(slide, MSO_SHAPE.OVAL, 10.4, 1.1, 3.7, 4.8, GOLD, True, 75)
+add_lily(slide, 9.55, 2.55, 1.65)
+add_text(slide, "LÈI", 0.85, 0.82, 3.5, 0.45, 18, GOLD, True)
+add_text(slide, "The internet was built\nfor engagement.\nWomen need it built\nfor safety.", 0.85, 1.8, 7.3, 2.4, 34, MIST, True, font="Aptos Display")
+add_text(slide, "Every day, women navigate digital spaces that are fragmented, unsafe, or optimized for engagement rather than safety.", 0.9, 4.55, 7.2, 0.85, 18, MIST)
+add_text(slide, "Meet Lèi - a gated, trauma-informed digital ecosystem built exclusively for women to connect, discover, and grow safely.", 0.9, 5.72, 7.3, 0.7, 16, GOLD, True)
+add_footer(slide, 1)
 
-# 2. Problem
-slide = base_slide("The opportunity is not another social feed", "01  /  The problem")
-text(slide, "Women often have to stitch together support from disconnected places:", 0.8, 2.15, 11.7, 0.45, 21, INK)
-cards = [
-    ("Learn", "Campus resources and practical knowledge are hard to find at the moment they matter.", MAUVE),
-    ("Grow", "Career advice is scattered across cold networking, generic content, and one-off events.", GOLD),
-    ("Belong", "Connection is valuable only when people feel safe enough to ask, share, and return.", GREEN),
+# Slide 2: Education and career growth
+slide = new_slide()
+add_heading(slide, "02  /  Track alignment", "Empowerment becomes tangible when support leads somewhere.", 2)
+add_text(slide, "Lèi goes beyond a chat app: it turns knowledge, opportunity, and immediate help into an accessible daily experience.", 0.82, 2.0, 11.6, 0.48, 19, MIST)
+features = [
+    ("EDUCATION", "Discord-style hubs", "Women in STEM, higher education, grad research, and first-gen communities share knowledge and opportunities."),
+    ("MUTUAL AID", "Campus SOS", "A student at GSU can request a sanitary pad, form a study circle, or reach nearby peers in minutes."),
+    ("CAREER", "Lèi AI Concierge", "Resume feedback, career coaching, wellness grounding, and a clear next action in one private conversation."),
 ]
-for i, (heading, body, accent) in enumerate(cards):
-    x = 0.8 + i * 4.15
-    box(slide, x, 3.0, 3.65, 2.45, RGBColor(255, 255, 255), True)
-    box(slide, x, 3.0, 0.1, 2.45, accent)
-    text(slide, heading, x + 0.3, 3.35, 2.9, 0.38, 22, INK, True)
-    text(slide, body, x + 0.3, 3.9, 2.95, 1.1, 15, MUTED)
-text(slide, "The gap: support exists, but it is not connected to the woman's next step.", 0.8, 6.0, 11.8, 0.45, 21, MAUVE, True)
-footer(slide, 2)
+for index, (tag, title, body) in enumerate(features):
+    x = 0.82 + index * 4.1
+    add_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, x, 2.95, 3.55, 2.65, RGBColor(42, 28, 38), True)
+    add_shape(slide, MSO_SHAPE.RECTANGLE, x, 2.95, 0.1, 2.65, GOLD if index == 1 else RGBColor(185, 141, 169))
+    add_text(slide, tag, x + 0.3, 3.25, 2.75, 0.24, 10, GOLD, True)
+    add_text(slide, title, x + 0.3, 3.68, 2.9, 0.5, 22, MIST, True, font="Aptos Display")
+    add_text(slide, body, x + 0.3, 4.45, 2.9, 0.85, 14, MIST)
+add_text(slide, "Track outcome: more access to learning, more career agency, more women able to help one another.", 0.82, 6.25, 11.6, 0.4, 18, GOLD, True)
 
-# 3. Solution
-slide = base_slide("Lèi turns support into a guided journey", "02  /  The solution", True)
-text(slide, "One trusted front door. Three pathways to momentum.", 0.8, 2.15, 11.7, 0.45, 21, PALE)
-pillars = [
-    ("01", "Learn", "Campus SOS, student aid, grounding resources, and peer knowledge."),
-    ("02", "Grow", "Career conversations, AI coaching, milestones, and opportunity sharing."),
-    ("03", "Connect", "Wellbeing signals, circles, meetups, DMs, and mutual aid."),
+# Slide 3: Meaningful connections and safety
+slide = new_slide(False)
+add_heading(slide, "03  /  Meaningful connection", "Digital connection should translate into real-world safety.", 3)
+add_text(slide, "Lèi gives connection context: how I feel, where I am, and what kind of support I need today.", 0.82, 2.0, 11.6, 0.48, 19, INK)
+features = [
+    ("WELLBEING", "What part of HER are you today?", "Teams-style status lets members signal their state without changing what the algorithm shows them."),
+    ("LOCAL", "USA City Meetups", "Filter by city and state to build trusted friendships in verified public settings, like NFS in Atlanta."),
+    ("SAFETY", "Beacons and legal support", "Safety beacons, rights guides, emergency hotlines, and support timers connect digital care to physical reality."),
 ]
-for i, (num, heading, body) in enumerate(pillars):
-    x = 0.85 + i * 4.12
-    box(slide, x, 3.0, 3.55, 2.5, RGBColor(42, 28, 38), True)
-    text(slide, num, x + 0.28, 3.28, 0.65, 0.4, 15, GOLD, True)
-    text(slide, heading, x + 0.28, 3.78, 2.8, 0.45, 25, PALE, True, "Aptos Display")
-    text(slide, body, x + 0.28, 4.45, 2.8, 0.75, 15, PALE)
-text(slide, "The product is not the number of modules. It is the moment a member finds her next useful action.", 0.85, 6.1, 11.7, 0.45, 18, GOLD, True)
-footer(slide, 3, True)
+for index, (tag, title, body) in enumerate(features):
+    x = 0.82 + index * 4.1
+    add_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, x, 2.95, 3.55, 2.65, RGBColor(255, 255, 255), True)
+    add_text(slide, tag, x + 0.28, 3.25, 2.9, 0.25, 10, MAUVE, True)
+    add_text(slide, title, x + 0.28, 3.67, 2.9, 0.62, 20, INK, True, font="Aptos Display")
+    add_text(slide, body, x + 0.28, 4.5, 2.92, 0.78, 14, MUTED)
+add_text(slide, "Meaningful connection is not a metric. It is a person knowing where to turn next.", 0.82, 6.25, 11.6, 0.4, 18, MAUVE, True)
 
-# 4. Demo journey
-slide = base_slide("Our demo: one member, one connected journey", "03  /  The product")
-text(slide, "Tell this story live instead of clicking every feature.", 0.8, 2.1, 11.5, 0.4, 20, MUTED)
-steps = [
-    ("01", "Arrive", "A welcoming gate asks what she needs today."),
-    ("02", "Name the need", "She selects ambitious, overwhelmed, or healing."),
-    ("03", "Find support", "She sees campus help, career guidance, and safe circles."),
-    ("04", "Take action", "She posts, joins, asks, learns, or connects."),
+# Slide 4: Zero-trust architecture
+slide = new_slide(False)
+add_heading(slide, "04  /  Technical edge", "Trust is not a setting. It is the architecture.", 4)
+add_text(slide, "Lèi treats safety as the foundation that makes education, career growth, and connection possible.", 0.82, 2.0, 11.6, 0.48, 19, INK)
+architecture = [
+    ("01", "Credential uniqueness", "Phone and email indexing reduce burner accounts and duplicate signups."),
+    ("02", "Multi-factor onboarding", "Camera liveness checks through MediaDevices API plus real 6-digit SMS verification in production."),
+    ("03", "Spatial access control", "Members choose a primary sanctuary space; cross-space access is locked behind an appeal workflow."),
 ]
-for i, (num, heading, body) in enumerate(steps):
-    x = 0.82 + i * 3.1
-    text(slide, num, x, 3.1, 0.6, 0.4, 15, MAUVE, True)
-    box(slide, x + 0.72, 3.3, 1.75, 0.04, GOLD)
-    text(slide, heading, x, 3.75, 2.45, 0.42, 21, INK, True)
-    text(slide, body, x, 4.35, 2.45, 1.05, 15, MUTED)
-text(slide, "Judge takeaway: Lèi reduces the distance between vulnerability and opportunity.", 0.82, 6.18, 11.7, 0.42, 20, MAUVE, True)
-footer(slide, 4)
+for index, (number, title, body) in enumerate(architecture):
+    y = 2.95 + index * 1.05
+    add_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, 0.82, y, 11.4, 0.82, RGBColor(255, 255, 255), True)
+    add_text(slide, number, 1.1, y + 0.18, 0.55, 0.35, 15, MAUVE, True)
+    add_text(slide, title, 1.9, y + 0.15, 3.0, 0.3, 17, INK, True)
+    add_text(slide, body, 5.0, y + 0.12, 6.65, 0.4, 14, MUTED)
+add_text(slide, "The technical edge is not surveillance. It is intentional boundaries that protect agency.", 0.82, 6.35, 11.6, 0.4, 18, GREEN, True)
 
-# 5. Track alignment
-slide = base_slide("Built for the track, not adjacent to it", "04  /  Track alignment", True)
-alignment = [
-    ("Education", "Campus SOS + student networks", "A student can find immediate help, resources, and peers without leaving her trusted space."),
-    ("Career growth", "AI concierge + career feed", "A member can turn a question into coaching, a conversation, or a concrete next step."),
-    ("Meaningful connections", "Circles + wellbeing + meetups", "The platform makes connection contextual: who I am, what I need, and where I am today."),
-]
-for i, (heading, label, body) in enumerate(alignment):
-    y = 2.15 + i * 1.45
-    text(slide, heading, 0.85, y, 2.15, 0.32, 17, GOLD, True)
-    text(slide, label, 3.1, y, 3.2, 0.32, 18, PALE, True)
-    text(slide, body, 6.5, y - 0.02, 5.7, 0.55, 15, PALE)
-    box(slide, 0.85, y + 0.75, 11.35, 0.02, RGBColor(82, 57, 75))
-text(slide, "A single experience connects all three outcomes.", 0.85, 6.55, 11.5, 0.35, 19, GOLD, True)
-footer(slide, 5, True)
-
-# 6. Trust
-slide = base_slide("Trust is the product feature", "05  /  Why this can work")
-trust = [
-    ("Protected entry", "A gated experience and community covenant make the first interaction feel intentional."),
-    ("Contextual spaces", "Members choose the space that feels right while keeping a shared welcome realm."),
-    ("Trauma-informed design", "Wellbeing is a signal for support, not a label that changes her access or worth."),
-    ("Safety by default", "SOS, reporting, age gates, and privacy controls turn belonging into infrastructure."),
-]
-for i, (heading, body) in enumerate(trust):
-    x = 0.85 + (i % 2) * 6.0
-    y = 2.25 + (i // 2) * 1.95
-    box(slide, x, y, 5.25, 1.35, RGBColor(255, 255, 255), True)
-    text(slide, heading, x + 0.25, y + 0.22, 4.6, 0.32, 18, INK, True)
-    text(slide, body, x + 0.25, y + 0.64, 4.6, 0.5, 14, MUTED)
-text(slide, "We are designing for the moment someone decides whether it is safe to stay.", 0.85, 6.45, 11.5, 0.4, 19, MAUVE, True)
-footer(slide, 6)
-
-# 7. Impact
-slide = base_slide("We will measure movement, not vanity metrics", "06  /  Impact")
-text(slide, "A pilot with campuses and women-led communities can measure whether Lèi creates real momentum:", 0.8, 2.05, 11.8, 0.55, 19, INK)
-metrics = [
-    ("Access", "time to first useful resource"),
-    ("Growth", "career actions started per member"),
-    ("Connection", "meaningful replies and repeat participation"),
-    ("Safety", "resolved SOS and support requests"),
-]
-for i, (label, body) in enumerate(metrics):
-    x = 0.82 + i * 3.1
-    box(slide, x, 3.1, 2.7, 2.0, RGBColor(255, 255, 255), True)
-    text(slide, label, x + 0.25, 3.45, 2.2, 0.35, 18, MAUVE, True)
-    text(slide, body, x + 0.25, 4.05, 2.15, 0.65, 16, INK)
-text(slide, "North star: more women leave each interaction with a person, resource, or action that moves them forward.", 0.82, 6.0, 11.7, 0.55, 20, GREEN, True)
-footer(slide, 7)
-
-# 8. Roadmap
-slide = base_slide("The prototype proves the direction", "07  /  What comes next", True)
-roadmap = [
-    ("Now", "Interactive sanctuary prototype", "Validate the journey and emotional language with real members."),
-    ("Next", "Campus and career pilots", "Partner with one campus and one women-led career community."),
-    ("Then", "Trusted opportunity graph", "Connect needs to mentors, resources, events, and measurable outcomes."),
-]
-for i, (phase, heading, body) in enumerate(roadmap):
-    x = 0.85 + i * 4.1
-    text(slide, phase.upper(), x, 2.35, 2.7, 0.3, 11, GOLD, True)
-    text(slide, heading, x, 2.85, 3.1, 0.75, 23, PALE, True, "Aptos Display")
-    text(slide, body, x, 4.05, 3.15, 1.1, 15, PALE)
-text(slide, "We are not asking women to find their way through another platform. We are building a place that helps them move.", 0.85, 6.15, 11.6, 0.55, 19, GOLD, True)
-footer(slide, 8, True)
-
-# 9. Close
-slide = prs.slides.add_slide(prs.slide_layouts[6])
-box(slide, 0, 0, W, H, BG)
-text(slide, "LEI", 0.85, 1.25, 3, 0.5, 17, GOLD, True)
-text(slide, "Everything for HER.\nConnect. Discover. Grow.", 0.85, 2.25, 9.2, 1.6, 36, PALE, True, "Aptos Display")
-text(slide, "A protected ecosystem for the next step.", 0.9, 4.65, 7.5, 0.45, 21, GOLD)
-text(slide, "Live demo: pkyeibrewu1.github.io/LEI/?developer=1", 0.9, 6.2, 7.8, 0.3, 12, PALE)
-footer(slide, 9, True)
+# Slide 5: Conclusion
+slide = new_slide()
+add_shape(slide, MSO_SHAPE.OVAL, 8.8, -0.8, 5.6, 7.2, MAUVE, True, 45)
+add_lily(slide, 10.0, 2.0, 1.8)
+add_text(slide, "LÈI", 0.85, 1.05, 3.0, 0.45, 18, GOLD, True)
+add_text(slide, "Infrastructure for\nwomen's autonomy.", 0.85, 2.0, 7.5, 1.3, 37, MIST, True, font="Aptos Display")
+add_text(slide, "When women are safe, supported, and connected, they change the world.", 0.9, 4.1, 7.4, 0.55, 22, GOLD, True)
+add_text(slide, "Thank you.", 0.9, 5.35, 3.0, 0.45, 20, MIST)
+add_text(slide, "Live demo: pkyeibrewu1.github.io/LEI/?developer=1", 0.9, 6.22, 7.5, 0.28, 11, MIST)
+add_footer(slide, 5)
 
 prs.save("presentation/lei-hackathon-pitch.pptx")
