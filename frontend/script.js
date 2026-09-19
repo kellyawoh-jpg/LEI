@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const statusOptionsGrid = document.querySelectorAll('#statusOptionsGrid .trait-card');
   const saveStatusBtn = document.getElementById('saveStatusBtn');
 
-  // App Tabs (Left Sidebar)
+  // App Tabs
   const appTabs = document.querySelectorAll('.app-tab');
   const tabPanes = document.querySelectorAll('.platform-tab-pane');
 
@@ -948,5 +948,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (aboutBtn && aboutModal && closeAboutBtn) {
     aboutBtn.addEventListener('click', () => aboutModal.classList.add('active'));
     closeAboutBtn.addEventListener('click', () => aboutModal.classList.remove('active'));
+    aboutModal.addEventListener('click', (e) => { if (e.target === aboutModal) aboutModal.classList.remove('active'); });
   }
 });

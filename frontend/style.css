@@ -67,7 +67,7 @@ body.theme-ivory .particle { background: radial-gradient(circle, #e6d3bc 0%, rgb
 .top-nav { position: fixed; top: 0; left: 0; width: 100%; padding: 24px 36px; display: flex; justify-content: space-between; align-items: center; z-index: 50; pointer-events: auto; }
 .top-nav.hidden { display: none !important; }
 .nav-brand-tag { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-.nav-dot { width: 6px; height: 6px; border-radius: 50%; background-color: var(--mauve-light); box-shadow: 0 0 8px rgba(185, 141, 169, 0.8); }
+.nav-dot { width: 7px; height: 7px; border-radius: 50%; background-color: var(--gold-accent); box-shadow: 0 0 10px rgba(245, 196, 107, 0.8); }
 .nav-tag-text { font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--mauve-base); font-weight: 400; }
 .nav-about-btn { display: inline-flex; align-items: center; gap: 6px; background: rgba(43, 22, 36, 0.35); backdrop-filter: blur(10px); border: 1px solid rgba(185, 141, 169, 0.22); color: var(--mauve-pale); font-family: 'Montserrat', sans-serif; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; padding: 7px 16px; border-radius: 20px; cursor: pointer; opacity: 0; animation: fadeIn 1s ease 1.2s forwards; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 .btn-sparkle { color: var(--gold-accent); font-size: 0.75rem; transition: transform 0.4s ease; }
@@ -100,6 +100,13 @@ body.theme-ivory .particle { background: radial-gradient(circle, #e6d3bc 0%, rgb
 @keyframes unfoldPetal { 0% { opacity: 0; transform: scale(0.15) rotate(6deg); } 40% { opacity: 0.9; } 100% { opacity: 0.96; transform: scale(1) rotate(0deg); } }
 @keyframes unfoldPetalCenter { 0% { opacity: 0; transform: scale(0.08) translateY(20px); } 50% { opacity: 0.95; } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 .center-glow { opacity: 0; animation: fadeIn 1.5s ease-out 1.5s forwards; }
+
+/* Lily Stamens, Anthers, and Center Elements in Gold */
+.stamen-filament { fill: none; stroke: var(--gold-accent); stroke-width: 1.8; stroke-linecap: round; }
+.pistil-stem { stroke: var(--gold-accent); }
+.anther { fill: var(--gold-accent); filter: drop-shadow(0 0 8px rgba(245, 196, 107, 0.9)); }
+.pistil-tip { fill: var(--gold-accent); }
+svg circle[fill="#1b1218"], svg polygon[points*="1b1218"], svg [fill="#1b1218"] { fill: var(--gold-accent) !important; }
 
 .brand-block { margin-top: 20px; display: flex; flex-direction: column; align-items: center; }
 .pretitle { font-size: 0.72rem; font-weight: 300; letter-spacing: 0.35em; text-transform: uppercase; color: var(--mauve-base); opacity: 0; transform: translateY(12px); animation: revealText 1.4s cubic-bezier(0.16, 1, 0.3, 1) 2.2s forwards; }
@@ -149,7 +156,6 @@ body.theme-ivory .particle { background: radial-gradient(circle, #e6d3bc 0%, rgb
 .primary-btn:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
 
 .celebration-card { position: relative; max-width: 520px; text-align: center; padding: 46px 36px 42px; overflow: hidden; }
-.celebration-card .back-link { position: absolute; top: 26px; left: 28px; margin-bottom: 0; z-index: 10; }
 .celebration-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 .celebration-badge-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; margin: 6px auto 18px; z-index: 2; }
 .ripple-ring { position: absolute; border-radius: 50%; border: 1px solid rgba(245, 196, 107, 0.4); pointer-events: none; animation: rippleSpread 2.8s cubic-bezier(0.2, 0.8, 0.2, 1) infinite; }
@@ -304,7 +310,6 @@ body.theme-ivory .particle { background: radial-gradient(circle, #e6d3bc 0%, rgb
   .app-tab { width: auto; white-space: nowrap; padding: 8px 12px; }
 }
 
-/* Platform Module Panes */
 .platform-tab-pane { flex: 1; max-width: 920px; display: flex; justify-content: center; }
 .platform-tab-pane.hidden { display: none !important; }
 
@@ -509,26 +514,81 @@ body.theme-ivory .particle { background: radial-gradient(circle, #e6d3bc 0%, rgb
 .btn-donate:hover { background: var(--ivory-text-main); color: #ffffff; border-color: var(--ivory-text-main); }
 
 /* ====================================================
-   IVORY MODALS & DIALOGS
+   IVORY MODALS & DIALOGS (EXACT MATCH FOR POP-UP BOX)
    ==================================================== */
-.modal-backdrop { position: fixed; inset: 0; background: rgba(36, 28, 23, 0.45); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.35s ease; }
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(36, 28, 23, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
 .modal-backdrop.active { opacity: 1; pointer-events: auto; }
 
-body.theme-ivory .about-card { background: #ffffff !important; border: 1px solid var(--ivory-border) !important; border-radius: 20px; padding: 32px 28px; max-width: 440px; width: 90%; position: relative; text-align: center; color: var(--ivory-text-main) !important; box-shadow: 0 16px 45px rgba(36, 28, 23, 0.12) !important; }
-body.theme-ivory .close-modal-btn { color: var(--ivory-text-muted) !important; }
-body.theme-ivory .close-modal-btn:hover { color: var(--ivory-text-main) !important; }
-body.theme-ivory .about-title { color: var(--ivory-text-main) !important; }
-body.theme-ivory .about-text { color: var(--ivory-text-muted) !important; }
-body.theme-ivory .about-footer { color: var(--ivory-accent-warm) !important; }
+.about-card {
+  background: linear-gradient(145deg, rgba(50, 28, 41, 0.92), rgba(30, 16, 26, 0.96));
+  border: 1px solid rgba(185, 141, 169, 0.3);
+  border-radius: 24px;
+  padding: 36px 32px 32px;
+  max-width: 380px;
+  width: 90%;
+  position: relative;
+  text-align: left;
+  box-shadow: 0 20px 50px rgba(10, 5, 9, 0.8);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
 
-.sms-modal-card { max-width: 440px !important; }
+.close-modal-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.close-modal-btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.05); }
+
+.about-icon { font-size: 1.8rem; margin-bottom: 12px; }
+.about-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+.about-text {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #d1b6c7;
+  font-weight: 300;
+}
+
+.sms-modal-card { max-width: 440px !important; text-align: center !important; }
 .sms-phone-target-badge { background: var(--ivory-surface); border: 1px solid var(--ivory-border); padding: 8px 16px; border-radius: 12px; font-size: 0.88rem; font-weight: 700; color: var(--ivory-text-main); margin: 12px auto; display: inline-block; }
 .sms-modal-action-box { display: flex; flex-direction: column; gap: 12px; margin: 14px 0; }
 .btn-open-sms-app { background: #2d8a43; color: #ffffff; padding: 11px; border-radius: 12px; text-decoration: none; font-size: 0.76rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .sms-code-input-row { display: flex; gap: 8px; }
 .sms-code-input-row input { flex: 1; background: var(--ivory-surface) !important; border: 1px solid var(--ivory-border) !important; border-radius: 10px; padding: 10px; font-size: 1rem; letter-spacing: 0.25em; text-align: center; font-weight: 700; color: var(--ivory-text-main) !important; outline: none; }
 
-.beacon-modal-card { max-width: 480px; }
+.beacon-modal-card { max-width: 480px; text-align: center !important; }
 .beacon-icon-wrap { width: 66px; height: 66px; margin: 0 auto 12px; position: relative; display: flex; align-items: center; justify-content: center; }
 .beacon-core-icon { font-size: 2.3rem; position: relative; z-index: 2; }
 .beacon-pulse-ring { position: absolute; inset: 0; border-radius: 50%; background: rgba(230, 35, 61, 0.18); animation: beaconPulseRing 2s infinite; }
@@ -550,7 +610,7 @@ body.theme-ivory .about-footer { color: var(--ivory-accent-warm) !important; }
 .btn-copy-invite { background: var(--ivory-text-main); border: none; color: #ffffff; font-weight: 600; font-size: 0.72rem; padding: 0 16px; border-radius: 10px; cursor: pointer; }
 .invite-note { font-size: 0.68rem; color: var(--ivory-text-muted); }
 
-.settings-card { max-width: 460px; }
+.settings-card { max-width: 460px; text-align: center !important; }
 .settings-body { display: flex; flex-direction: column; gap: 16px; margin-top: 18px; text-align: left; }
 .setting-item { display: flex; justify-content: space-between; align-items: center; background: var(--ivory-surface) !important; border: 1px solid var(--ivory-border) !important; border-radius: 14px; padding: 14px; gap: 12px; }
 .setting-sub { font-size: 0.7rem; color: var(--ivory-text-muted); line-height: 1.4; margin-top: 2px; }
@@ -559,7 +619,7 @@ body.theme-ivory .about-footer { color: var(--ivory-accent-warm) !important; }
 .danger-title { color: #d82b43; }
 .btn-delete-account { background: #d82b43; border: none; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 600; padding: 8px 14px; border-radius: 12px; cursor: pointer; white-space: nowrap; }
 
-.report-card { max-width: 460px; }
+.report-card { max-width: 460px; text-align: center !important; }
 .report-form { margin-top: 14px; display: flex; flex-direction: column; gap: 12px; text-align: left; }
 body.theme-ivory .report-form input, body.theme-ivory .report-form select, body.theme-ivory .report-form textarea { background: var(--ivory-surface) !important; border: 1px solid var(--ivory-border) !important; color: var(--ivory-text-main) !important; }
 .evidence-input { font-size: 0.75rem; color: var(--ivory-text-muted); }
